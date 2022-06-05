@@ -2,10 +2,7 @@ import 'dart:ffi';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:groupmahjongrecord/view/footer/Footer.dart';
-import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:groupmahjongrecord/Group.dart';
 import 'package:groupmahjongrecord/User.dart';
@@ -30,13 +27,8 @@ class groupTopPage extends State<GroupTop> {
     _getScoreList();
   }
 
-  final ImagePicker _picker = ImagePicker();
-  File? _grupeFile;
-  File? _profileFile;
-
   var _scores = <Score>{};
   bool _isLoading = true;
-  int _selectedIndex = 0;
 
   Future<void> _getScoreList() async {
     User user = widget.user;
@@ -63,150 +55,6 @@ class groupTopPage extends State<GroupTop> {
         _isLoading = false;
       });
     }
-  }
-
-  // プロフィール変更ダイアログ
-  void _profileEditDialog(User user) {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('プロフィールを編集'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: [
-              Column(
-                children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      onPrimary: Colors.black,
-                      shape: const CircleBorder(
-                        side: BorderSide(
-                          color: Colors.transparent,
-                          width: 1,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final ImagePicker _picker = ImagePicker();
-                      var image =
-                          await _picker.pickImage(source: ImageSource.gallery);
-                      if (image != null) {
-                        // what you get if you cancel
-                        setState(() {
-                          _profileFile = image as File?;
-                        });
-                      }
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(
-                        user.imagePath,
-                      ),
-                      radius: 40,
-                    ),
-                  ),
-                  TextFormField(
-                    initialValue: user.name,
-                    decoration: const InputDecoration(
-                      labelText: '名前',
-                    ),
-                  ),
-                  TextFormField(
-                    initialValue: user.introduction,
-                    decoration: const InputDecoration(
-                      labelText: '自己紹介',
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                ],
-              )
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('プロフィール更新'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _sideMenu() {
-    var _user = widget.user;
-    return SizedBox(
-      width: 200,
-      child: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(
-                _user.name,
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-              accountEmail: null,
-              currentAccountPicture: GestureDetector(
-                onTap: () => {_profileEditDialog(_user)},
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(
-                    _user.imagePath,
-                  ),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.grid_view),
-              title: const Text(
-                'グループリスト',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.of(context).pushReplacementNamed("/groupList");
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: const Text(
-                'ログアウト',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () => showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('ログアウトしますか？'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('いいえ'),
-                    ),
-                    TextButton(
-                      onPressed: () =>
-                          Navigator.of(context).pushReplacementNamed("/"),
-                      child: const Text('はい'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _topImage() {
@@ -437,119 +285,67 @@ class groupTopPage extends State<GroupTop> {
     );
   }
 
-  Widget _bottomNavigation() {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'グループTop',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.edit),
-          label: '対局開始',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.group),
-          label: 'メンバー',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.event_note),
-          label: '対局記録',
-        ),
-      ],
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-    );
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   Widget _main() {
-    switch (_selectedIndex) {
-      case 0: //グループトップ
-        return Column(
-          children: <Widget>[
-            _topImage(),
-            _isLoading
-                ? Column(children: const <Widget>[
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(),
-                    )
-                  ])
-                : _recentScore(),
-          ],
-        );
-      case 1: // 対局開始
-        return Text(
-          "対局者を選択",
-          style: const TextStyle(
-              color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-        );
-      case 2: // メンバー
-        return Text(
-          "グループメンバー",
-          style: const TextStyle(
-              color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-        );
-      case 3: // 対局記録
-        return Text(
-          "対局記録",
-          style: const TextStyle(
-              color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-        );
-      default:
-        return Column(
-          children: <Widget>[
-            _topImage(),
-            _isLoading
-                ? Column(children: const <Widget>[
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(),
-                    )
-                  ])
-                : _recentScore(),
-          ],
-        );
-    }
+    //グループトップ
+    return Column(
+      children: <Widget>[
+        _topImage(),
+        _isLoading
+            ? Column(children: const <Widget>[
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                )
+              ])
+            : _recentScore(),
+      ],
+    );
+    // case 1: // 対局開始
+    //   return Text(
+    //     "対局者を選択",
+    //     style: const TextStyle(
+    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
+    //   );
+    // case 2: // メンバー
+    //   return Text(
+    //     "グループメンバー",
+    //     style: const TextStyle(
+    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
+    //   );
+    // case 3: // 対局記録
+    //   return Text(
+    //     "対局記録",
+    //     style: const TextStyle(
+    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
+    //   );
+    // default:
+    //   return Column(
+    //     children: <Widget>[
+    //       _topImage(),
+    //       _isLoading
+    //           ? Column(children: const <Widget>[
+    //               SizedBox(
+    //                 height: 50,
+    //                 width: 50,
+    //               ),
+    //               SizedBox(
+    //                 height: 50,
+    //                 width: 50,
+    //                 child: CircularProgressIndicator(),
+    //               )
+    //             ])
+    //           : _recentScore(),
+    //     ],
+    //   );
   }
 
   @override
   Widget build(BuildContext context) {
-    var group = widget.group;
-    return Scaffold(
-      appBar: AppBar(
-        title: null,
-      ),
-      drawer: _sideMenu(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(children: <Widget>[
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              _main(),
-              Footer(),
-            ]),
-          ),
-        ),
-      ),
-      bottomNavigationBar: _bottomNavigation(),
-    );
+    return _main();
   }
 }
