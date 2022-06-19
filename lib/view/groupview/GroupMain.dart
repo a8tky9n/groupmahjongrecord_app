@@ -214,6 +214,21 @@ class groupMainPage extends State<GroupMain> {
           group: group,
           user: user,
         );
+      case 1:
+        return RecordScore(
+          group: group,
+          user: user,
+        );
+      case 2:
+        return GroupMember(
+          group: group,
+          user: user,
+        );
+      case 3:
+        return GroupScore(
+          group: group,
+          user: user,
+        );
       default:
         return GroupTop(
           group: group,

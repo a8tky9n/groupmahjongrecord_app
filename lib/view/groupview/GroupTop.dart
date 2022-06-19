@@ -8,6 +8,7 @@ import 'package:groupmahjongrecord/Group.dart';
 import 'package:groupmahjongrecord/User.dart';
 import 'package:groupmahjongrecord/Score.dart';
 
+// グループトップ画面
 class GroupTop extends StatefulWidget {
   final Group group;
   final User user;
@@ -30,6 +31,7 @@ class groupTopPage extends State<GroupTop> {
   var _scores = <Score>{};
   bool _isLoading = true;
 
+  // サーバーから成績を取ってくる
   Future<void> _getScoreList() async {
     User user = widget.user;
     print('get user info');
@@ -57,6 +59,7 @@ class groupTopPage extends State<GroupTop> {
     }
   }
 
+  // グループのトップ画
   Widget _topImage() {
     var group = widget.group;
     return Column(
@@ -170,6 +173,7 @@ class groupTopPage extends State<GroupTop> {
     );
   }
 
+  // 直近の成績
   Widget _recentScore() {
     var user = widget.user;
     return Column(
@@ -235,9 +239,10 @@ class groupTopPage extends State<GroupTop> {
     );
   }
 
+  // 成績の行
   Widget _scoreListItem(Score score) {
     return Container(
-      height: 70,
+      height: 75,
       padding: EdgeInsets.all(8),
       margin: EdgeInsets.all(8),
       child: Row(
@@ -248,6 +253,7 @@ class groupTopPage extends State<GroupTop> {
               child: Text(
                 DateFormat('yyyy-M-d').format(score.createDate),
                 textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12.0),
               )),
           Expanded(flex: 1, child: _scoreItem(score.points[0], "あいうえおか")),
           Expanded(
@@ -262,6 +268,7 @@ class groupTopPage extends State<GroupTop> {
     );
   }
 
+  // 成績のセル
   Widget _scoreItem(int score, String name) {
     return Container(
       child: Column(
@@ -277,7 +284,7 @@ class groupTopPage extends State<GroupTop> {
             style: TextStyle(fontSize: 12.0),
             strutStyle: StrutStyle(
               fontSize: 12.0,
-              height: 1.1,
+              height: 1.5,
             ),
           ),
         ],

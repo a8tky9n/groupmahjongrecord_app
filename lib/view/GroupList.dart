@@ -57,7 +57,7 @@ class contactMainPage extends State<GroupList> with TickerProviderStateMixin {
             name: res['data']['first_name'],
             imagePath: res['data']['avatar'],
             introduction: '',
-            passWord: '');
+            rate: 1500);
       });
     } else {
       print('Request failed with status: ${response.statusCode}.');

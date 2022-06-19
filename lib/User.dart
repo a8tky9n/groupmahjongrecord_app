@@ -6,13 +6,12 @@ class User {
   final String name;
   final String imagePath;
   final String introduction;
-  final String passWord;
+  final int rate;
 
-  const User({
-    required this.userId,
-    required this.name,
-    required this.imagePath,
-    required this.introduction,
-    required this.passWord,
-  });
+  const User(
+      {required this.userId,
+      required this.name,
+      required this.imagePath,
+      required this.introduction,
+      required this.rate});
 }
