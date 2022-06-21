@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:groupmahjongrecord/Group.dart';
-import 'package:groupmahjongrecord/User.dart';
-import 'package:groupmahjongrecord/Score.dart';
+import 'package:groupmahjongrecord/models/Group.dart';
+import 'package:groupmahjongrecord/models/User.dart';
+import 'package:groupmahjongrecord/models/Score.dart';
 
 // 対戦記録画面
 class GroupMember extends StatefulWidget {

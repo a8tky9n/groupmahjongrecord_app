@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart';
 
-import 'package:groupmahjongrecord/Group.dart';
-import 'package:groupmahjongrecord/User.dart';
-import 'package:groupmahjongrecord/Score.dart';
+import 'package:groupmahjongrecord/models/Group.dart';
+import 'package:groupmahjongrecord/models/User.dart';
+import 'package:groupmahjongrecord/models/Score.dart';
+
+import 'package:groupmahjongrecord/components/UserCard.dart';
 
 // 対局開始用のユーザークラス
 class Player {
@@ -76,7 +78,7 @@ class recordScorePage extends State<RecordScore> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      childAspectRatio: 0.9,
+      childAspectRatio: 0.85,
       // return Column(
       children: <Widget>[
         if (_players.isNotEmpty)
@@ -102,18 +104,22 @@ class recordScorePage extends State<RecordScore> {
       String imageUrl, String title, int id, int rate, int position) {
     return Badge(
       badgeContent: (position == 1)
-          ? const Text('東',
-              style: TextStyle(color: Colors.white, fontFamily: 'PottaOne'))
+          ? const Text(
+              '東',
+              style: TextStyle(color: Colors.white, fontFamily: 'PottaOne'),
+            )
           : (position == 2)
               ? const Text('南',
-                  style: TextStyle(color: Colors.white, fontFamily: 'PottaOne'))
+                  style: TextStyle(color: Colors.black, fontFamily: 'PottaOne'))
               : (position == 3)
                   ? const Text('西',
                       style: TextStyle(
-                          color: Colors.white, fontFamily: 'PottaOne'))
+                          color: Colors.black, fontFamily: 'PottaOne'))
                   : const Text('北',
                       style: TextStyle(
-                          color: Colors.white, fontFamily: 'PottaOne')),
+                          color: Colors.black, fontFamily: 'PottaOne')),
+      badgeColor:
+          position == 1 ? Colors.red[600] as Color : Colors.teal[50] as Color,
       position: BadgePosition.topEnd(top: 1, end: 1),
       child: buildRateCard(imageUrl, title, id, rate),
     );
@@ -123,73 +129,29 @@ class recordScorePage extends State<RecordScore> {
   Widget buildRateCard(String imageUrl, String title, int id, int rate) {
     return SizedBox(
       height: 500,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: InkWell(
-          onTap: () => {
-            setState(() {
-              var pushedPlayer =
-                  _players.firstWhere((player) => player.user.userId == id);
-              pushedPlayer.position != 0
-                  ? {
-                      positions.add(pushedPlayer.position),
-                      pushedPlayer.position = 0,
-                      positions.sort((num1, num2) => num1 - num2)
-                    } // バッジ削除
-                  : positions.isNotEmpty
-                      ? {
-                          pushedPlayer.position = positions.first,
-                          positions.removeAt(0),
-                          positions.sort((num1, num2) => num1 - num2)
-                        } //バッジ追加
-                      : pushedPlayer.position = 0; // 席がないため追加しない
-            })
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 3),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      rate.toString(),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        elevation: 5,
-        margin: EdgeInsets.all(10),
+      child: UserCard(
+        imgPath: imageUrl,
+        userName: title,
+        userRate: rate,
+        OnTapCallback: () => {
+          setState(() {
+            var pushedPlayer =
+                _players.firstWhere((player) => player.user.userId == id);
+            pushedPlayer.position != 0
+                ? {
+                    positions.add(pushedPlayer.position),
+                    pushedPlayer.position = 0,
+                    positions.sort((num1, num2) => num1 - num2)
+                  } // バッジ削除
+                : positions.isNotEmpty
+                    ? {
+                        pushedPlayer.position = positions.first,
+                        positions.removeAt(0),
+                        positions.sort((num1, num2) => num1 - num2)
+                      } //バッジ追加
+                    : pushedPlayer.position = 0; // 席がないため追加しない
+          })
+        },
       ),
     );
   }

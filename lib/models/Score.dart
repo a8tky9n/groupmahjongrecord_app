@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:groupmahjongrecord/User.dart';
+import 'package:groupmahjongrecord/models/User.dart';
 
 @immutable
 class Score {

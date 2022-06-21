@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:groupmahjongrecord/Group.dart';
+import 'package:groupmahjongrecord/models/Group.dart';
 import 'package:groupmahjongrecord/view/footer/Footer.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupMain.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:groupmahjongrecord/User.dart';
+import 'package:groupmahjongrecord/models/User.dart';
 
 class GroupList extends StatefulWidget {
   @override

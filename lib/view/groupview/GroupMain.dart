@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:groupmahjongrecord/view/footer/Footer.dart';
-import 'package:groupmahjongrecord/Group.dart';
-import 'package:groupmahjongrecord/User.dart';
+import 'package:groupmahjongrecord/models/Group.dart';
+import 'package:groupmahjongrecord/models/User.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupTop.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupScore.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupMember.dart';

@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:groupmahjongrecord/Group.dart';
-import 'package:groupmahjongrecord/User.dart';
-import 'package:groupmahjongrecord/Score.dart';
+import 'package:groupmahjongrecord/models/Group.dart';
+import 'package:groupmahjongrecord/models/User.dart';
+import 'package:groupmahjongrecord/models/Score.dart';
+import 'package:groupmahjongrecord/components/ScoreRow.dart';
+import 'package:groupmahjongrecord/components/ScoreHeader.dart';
 
 // グループトップ画面
 class GroupTop extends StatefulWidget {
@@ -183,112 +185,14 @@ class groupTopPage extends State<GroupTop> {
           style: TextStyle(
               color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
         ),
-        Container(
-          height: 32,
-          padding: EdgeInsets.all(8),
-          margin: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const <Widget>[
-              Expanded(
-                flex: 1,
-                child: Text(
-                  '日付',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  '1位',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  '2位',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  '3位',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  '4位',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              )
-            ],
-          ),
-        ),
+        const ScoreHeader(),
         const Divider(),
-        for (var score in _scores) _scoreListItem(score),
+        for (var score in _scores)
+          ScoreRow(
+            score: score,
+            OnTapCallback: () => {},
+          ),
       ],
-    );
-  }
-
-  // 成績の行
-  Widget _scoreListItem(Score score) {
-    return Container(
-      height: 75,
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
-              flex: 1,
-              child: Text(
-                DateFormat('yyyy-M-d').format(score.createDate),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12.0),
-              )),
-          Expanded(flex: 1, child: _scoreItem(score.points[0], "あいうえおか")),
-          Expanded(
-              flex: 1, child: _scoreItem(score.points[1], score.users[0].name)),
-          Expanded(
-              flex: 1, child: _scoreItem(score.points[2], score.users[0].name)),
-          Expanded(
-              flex: 1, child: _scoreItem(score.points[3], score.users[0].name)),
-          const Divider(),
-        ],
-      ),
-    );
-  }
-
-  // 成績のセル
-  Widget _scoreItem(int score, String name) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(
-            score.toStringAsFixed(1),
-            style: TextStyle(color: score < 0 ? Colors.red : Colors.blue),
-          ),
-          Text(
-            name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 12.0),
-            strutStyle: StrutStyle(
-              fontSize: 12.0,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
