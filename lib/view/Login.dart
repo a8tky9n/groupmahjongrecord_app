@@ -1,13 +1,19 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/view/footer/Footer.dart';
+import 'package:groupmahjongrecord/configs/serverInfo.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+// ignore: use_key_in_widget_constructors
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => loginMainPage();
 }
 
+// ignore: camel_case_types
 class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
   late List<Tab> _tabs;
   late TabController _controller;
@@ -88,7 +94,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            color: Color.fromARGB(220, 255, 255, 255),
+            color: const Color.fromARGB(220, 255, 255, 255),
             height: 400,
             width: 350,
           ),
@@ -104,16 +110,16 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 50.0, right: 50),
+              padding: const EdgeInsets.only(left: 50.0, right: 50),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: false,
                         maxLines: 1,
                         onChanged: _handleEmail,
@@ -135,11 +141,11 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     // パスワード
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: true,
                         maxLines: 1,
                         onChanged: _handlePass,
@@ -163,7 +169,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                 child: const Text('ログイン'),
                 style: ElevatedButton.styleFrom(
@@ -214,7 +220,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            color: Color.fromARGB(220, 255, 255, 255),
+            color: const Color.fromARGB(220, 255, 255, 255),
             height: 400,
             width: 350,
           ),
@@ -230,16 +236,16 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 50.0, right: 50),
+              padding: const EdgeInsets.only(left: 50.0, right: 50),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: false,
                         maxLines: 1,
                         onChanged: _handleEmail,
@@ -261,11 +267,11 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     // パスワード
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: true,
                         maxLines: 1,
                         onChanged: _handlePass,
@@ -284,11 +290,11 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
                         },
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: true,
                         maxLines: 1,
                         onChanged: _handleConfPass,
@@ -318,7 +324,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                 child: const Text('アカウント作成'),
                 style: ElevatedButton.styleFrom(
@@ -332,8 +338,8 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
                         if (_email.isNotEmpty &&
                             _pass.isNotEmpty &&
                             _confPass.isNotEmpty) {
-                          // ログイン
-                          _sendRegister();
+                          // アカウント作成
+                          _createUid();
                         }
                       },
               ),
@@ -361,7 +367,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            color: Color.fromARGB(220, 255, 255, 255),
+            color: const Color.fromARGB(220, 255, 255, 255),
             height: 400,
             width: 350,
           ),
@@ -387,16 +393,16 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 25),
             Container(
-              padding: EdgeInsets.only(left: 50.0, right: 50),
+              padding: const EdgeInsets.only(left: 50.0, right: 50),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Container(
+                    SizedBox(
                       width: 330.0,
                       child: TextFormField(
                         enabled: true,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         obscureText: false,
                         maxLines: 1,
                         onChanged: _handleEmail,
@@ -424,7 +430,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
             ),
             const SizedBox(height: 15),
             Container(
-              padding: EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                 child: const Text('送信'),
                 style: ElevatedButton.styleFrom(
@@ -463,7 +469,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
     return Stack(
       alignment: AlignmentDirectional.center,
       children: <Widget>[
-        Container(
+        SizedBox(
           //decoration:
           //BoxDecoration(border: Border.all(color: Colors.blue, width: 5)),
           child: Image.asset(
@@ -487,6 +493,9 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
                   )
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
             const Text(
               'グループごとに麻雀の成績を管理',
@@ -529,8 +538,8 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
       color: const Color.fromARGB(255, 155, 212, 234),
       width: double.infinity,
       child: Container(
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
         child: Column(
           children: [
             SizedBox(
@@ -854,7 +863,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
     return Column(
       children: <Widget>[
         // タブ
-        Container(
+        SizedBox(
           width: 330.0,
           child: TabBar(
             onTap: (index) {
@@ -883,39 +892,135 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
 
   // ログイン
   Future<void> _sendLogin() async {
-    var url = Uri(scheme: 'https', host: 'reqres.in', path: '/api/login');
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = json.encode({'email': _email, 'password': _pass});
-    var response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      var itemCount = jsonResponse['totalItems'];
-      print('Number of books about http: $itemCount.');
+// メール/パスワードでログイン
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final UserCredential result = await auth.signInWithEmailAndPassword(
+        email: _email,
+        password: _pass,
+      );
+      // ログインに成功した場合
+      final User user = result.user!;
       setState(() {
         Navigator.pushNamed(context, '/groupList');
       });
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
+    } catch (e) {
+      // ログインに失敗した場合
+      setState(() {
+        print('Request failed with status: ${e.toString()}.');
+      });
     }
+
+    // var url = Uri(scheme: 'https', host: 'reqres.in', path: '/api/login');
+    // Map<String, String> headers = {'content-type': 'application/json'};
+    // String body = json.encode({'email': _email, 'password': _pass});
+    // var response = await http.post(url, headers: headers, body: body);
+    // if (response.statusCode == 200) {
+    //   // var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+    //   // var itemCount = jsonResponse['totalItems'];
+    //   // print('Number of books about http: $itemCount.');
+    //   setState(() {
+    //     Navigator.pushNamed(context, '/groupList');
+    //   });
+    // } else {
+    //   // print('Request failed with status: ${response.statusCode}.');
+    // }
   }
 
-  // アカウント登録
-  Future<void> _sendRegister() async {
-    var url = Uri(scheme: 'https', host: 'reqres.in', path: '/api/register');
-    Map<String, String> headers = {'content-type': 'application/json'};
-    String body = json.encode({'email': _email, 'password': _pass});
-    var response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      var itemCount = jsonResponse['totalItems'];
-      print('Number of books about http: $itemCount.');
+  // uidを作成
+  Future<void> _createUid() async {
+    try {
+      // メール/パスワードでユーザー登録
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final UserCredential result = await auth.createUserWithEmailAndPassword(
+        email: _email,
+        password: _pass,
+      );
+      // ログインに成功した場合
+      final User user = result.user!;
+
       setState(() {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('アカウント作成')));
-        // Navigator.pushNamed(context, '/groupList');
+        // サーバーにuidを登録する
+        _registerUid(user.uid);
+        print('Request failed with status: ${result.toString()}.');
       });
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+        setState(() {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('パスワードを複雑にしてください。')));
+        });
+      } else if (e.code == 'email-already-in-use') {
+        _getUid();
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // uidを取得
+  Future<void> _getUid() async {
+    try {
+      // メール/パスワードでサインイン
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final UserCredential result = await auth.signInWithEmailAndPassword(
+        email: _email,
+        password: _pass,
+      );
+      // ログインに成功した場合
+      final User user = result.user!;
+
+      setState(() {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('サインイン完了')));
+        // サーバーにuidを登録する
+        _registerUid(user.uid);
+        user.getIdToken().then((String result) {
+          print('JWT：' + result);
+        });
+        print('Request failed with status: ${result.toString()}.');
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
+  // uidを登録
+  Future<void> _registerUid(String uid) async {
+    try {
+      print('サーバーにUidを登録する : ${uid}');
+      var url = Uri(
+        scheme: ServerInfo.protocol,
+        host: ServerInfo.host,
+        port: 8000,
+        path: '/api/register',
+      );
+      String body = json.encode({'firebase_uid': uid, 'is_active': true});
+      print('RequestBody : ${body}');
+      var response = await http
+          .post(url, body: body, headers: {"Content-Type": "application/json"});
+      if (response.statusCode == 200) {
+        print('uid の登録完了');
+        setState(() {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('ユーザーの登録が完了しました。')));
+        });
+        // setState(() {
+        //   Navigator.pushNamed(context, '/groupList');
+        // });
+      } else {
+        print('uidの登録失敗: ${response.body}');
+      }
+    } catch (e) {
+      print('error: ${e}');
     }
   }
 
@@ -933,7 +1038,7 @@ class loginMainPage extends State<LoginPage> with TickerProviderStateMixin {
               _abstruct(),
               const SizedBox(height: 20),
               // フッター
-              Footer(),
+              const Footer(),
               const SizedBox(height: 5),
             ],
           ),

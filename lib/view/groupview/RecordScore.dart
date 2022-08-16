@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -168,6 +167,9 @@ class recordScorePage extends State<RecordScore> {
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
             )),
+        const SizedBox(
+          height: 15,
+        ),
         const Text(
           "東→南→西→北の席順で選択してください。",
           style: const TextStyle(color: Colors.black, fontSize: 16.0),

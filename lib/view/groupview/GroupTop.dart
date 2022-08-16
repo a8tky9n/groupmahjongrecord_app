@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -216,43 +215,6 @@ class groupTopPage extends State<GroupTop> {
             : _recentScore(),
       ],
     );
-    // case 1: // 対局開始
-    //   return Text(
-    //     "対局者を選択",
-    //     style: const TextStyle(
-    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-    //   );
-    // case 2: // メンバー
-    //   return Text(
-    //     "グループメンバー",
-    //     style: const TextStyle(
-    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-    //   );
-    // case 3: // 対局記録
-    //   return Text(
-    //     "対局記録",
-    //     style: const TextStyle(
-    //         color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
-    //   );
-    // default:
-    //   return Column(
-    //     children: <Widget>[
-    //       _topImage(),
-    //       _isLoading
-    //           ? Column(children: const <Widget>[
-    //               SizedBox(
-    //                 height: 50,
-    //                 width: 50,
-    //               ),
-    //               SizedBox(
-    //                 height: 50,
-    //                 width: 50,
-    //                 child: CircularProgressIndicator(),
-    //               )
-    //             ])
-    //           : _recentScore(),
-    //     ],
-    //   );
   }
 
   @override
