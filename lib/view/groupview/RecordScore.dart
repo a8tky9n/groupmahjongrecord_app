@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart';
 
-import 'package:groupmahjongrecord/models/Group.dart';
-import 'package:groupmahjongrecord/models/User.dart';
-import 'package:groupmahjongrecord/models/Score.dart';
+import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'package:groupmahjongrecord/data/models/User.dart';
+import 'package:groupmahjongrecord/data/models/Score.dart';
 
 import 'package:groupmahjongrecord/components/UserCard.dart';
 
@@ -58,11 +58,11 @@ class recordScorePage extends State<RecordScore> {
           print(user);
           _players.add(Player(
               user: User(
-                  userId: user['id'],
-                  name: user['first_name'],
-                  imagePath: user['avatar'],
-                  introduction: '',
-                  rate: 1500),
+                userId: user['id'],
+                name: user['first_name'],
+                imagePath: user['avatar'],
+                introduction: '',
+              ),
               position: 0));
         }
       });
@@ -84,23 +84,23 @@ class recordScorePage extends State<RecordScore> {
           for (var player in _players)
             (player.position == 0)
                 ? buildRateCard(
-                    player.user.imagePath,
-                    player.user.name,
-                    player.user.userId,
-                    player.user.rate,
+                    player.user.imagePath!,
+                    player.user.name!,
+                    player.user.userId!,
+                    1500,
                   )
                 : buildRageCardWidhBadge(
-                    player.user.imagePath,
-                    player.user.name,
-                    player.user.userId,
-                    player.user.rate,
+                    player.user.imagePath!,
+                    player.user.name!,
+                    player.user.userId!,
+                    1500,
                     player.position),
       ],
     );
   }
 
   Widget buildRageCardWidhBadge(
-      String imageUrl, String title, int id, int rate, int position) {
+      String imageUrl, String title, String id, int rate, int position) {
     return Badge(
       badgeContent: (position == 1)
           ? const Text(
@@ -125,7 +125,7 @@ class recordScorePage extends State<RecordScore> {
   }
 
   // ユーザーカード
-  Widget buildRateCard(String imageUrl, String title, int id, int rate) {
+  Widget buildRateCard(String imageUrl, String title, String id, int rate) {
     return SizedBox(
       height: 500,
       child: UserCard(

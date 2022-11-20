@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:groupmahjongrecord/models/Group.dart';
-import 'package:groupmahjongrecord/models/User.dart';
-import 'package:groupmahjongrecord/models/Score.dart';
+import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'package:groupmahjongrecord/data/models/User.dart';
+import 'package:groupmahjongrecord/data/models/Score.dart';
 
 // 対戦記録画面
 class GroupScore extends StatefulWidget {

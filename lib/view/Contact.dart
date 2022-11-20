@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Contact extends StatefulWidget {
+class Contact extends StatefulHookConsumerWidget {
   @override
-  State<StatefulWidget> createState() => contactMainPage();
+  contactMainPage createState() => contactMainPage();
 }
 
-class contactMainPage extends State<Contact> with TickerProviderStateMixin {
+class contactMainPage extends ConsumerState<Contact> {
   @override
   void initState() {
     super.initState();
@@ -167,6 +169,9 @@ class contactMainPage extends State<Contact> with TickerProviderStateMixin {
         // 左側のアイコン
         leading: IconButton(
           onPressed: () {
+            // ref
+            //     .read(sceneTitleProvider.notifier)
+            //     .update((state) => Scene.notice.name);
             Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios_new),

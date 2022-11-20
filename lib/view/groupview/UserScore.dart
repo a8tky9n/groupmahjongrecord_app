@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:groupmahjongrecord/models/User.dart';
-import 'package:fl_chart/fl_chart.dart'; // チャート
+import 'package:groupmahjongrecord/data/models/User.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 const gridColor = Color(0xff68739f);
 const titleColor = Color(0xff8c95db);
@@ -44,7 +44,7 @@ class userScorePage extends State<UserScore> {
             width: 200,
             child: Ink.image(
               image: NetworkImage(
-                widget.user.imagePath,
+                widget.user.imagePath!,
               ),
               fit: BoxFit.contain,
             ),
@@ -187,7 +187,7 @@ class userScorePage extends State<UserScore> {
           height: 20,
         ),
         Text(
-          widget.user.name,
+          widget.user.name!,
           style: const TextStyle(
               color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
         ),

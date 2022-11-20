@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:groupmahjongrecord/view/footer/Footer.dart';
-import 'package:groupmahjongrecord/models/Group.dart';
-import 'package:groupmahjongrecord/models/User.dart';
+import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'package:groupmahjongrecord/data/models/User.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupTop.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupScore.dart';
 import 'package:groupmahjongrecord/view/groupview/GroupMember.dart';
@@ -70,7 +70,7 @@ class groupMainPage extends State<GroupMain> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                _user.name,
+                _user.name.toString(),
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -81,7 +81,7 @@ class groupMainPage extends State<GroupMain> {
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   backgroundImage: NetworkImage(
-                    _user.imagePath,
+                    _user.imagePath.toString(),
                   ),
                 ),
               ),
@@ -172,7 +172,7 @@ class groupMainPage extends State<GroupMain> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(
-                        user.imagePath,
+                        user.imagePath.toString(),
                       ),
                       radius: 40,
                     ),

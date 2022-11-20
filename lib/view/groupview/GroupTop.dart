@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:groupmahjongrecord/models/Group.dart';
-import 'package:groupmahjongrecord/models/User.dart';
-import 'package:groupmahjongrecord/models/Score.dart';
+import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'package:groupmahjongrecord/data/models/User.dart';
+import 'package:groupmahjongrecord/data/models/Score.dart';
 import 'package:groupmahjongrecord/components/ScoreRow.dart';
 import 'package:groupmahjongrecord/components/ScoreHeader.dart';
 
@@ -69,7 +69,7 @@ class groupTopPage extends State<GroupTop> {
           height: 20,
         ),
         Text(
-          group.name,
+          group.title!,
           style: const TextStyle(
               color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold),
         ),
@@ -78,7 +78,7 @@ class groupTopPage extends State<GroupTop> {
         ),
         Ink.image(
           image: NetworkImage(
-            group.imagePath,
+            group.image!,
           ),
           height: 240,
           fit: BoxFit.contain,
@@ -87,7 +87,7 @@ class groupTopPage extends State<GroupTop> {
           height: 20,
         ),
         Text(
-          group.introduction,
+          group.text!,
           style: TextStyle(color: Colors.black, fontSize: 18.0),
         ),
         const SizedBox(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Legalnotice extends StatelessWidget {
+class Legalnotice extends ConsumerWidget {
   const Legalnotice({Key? key}) : super(key: key);
 
   Widget _legalNotice() {
@@ -46,7 +48,7 @@ class Legalnotice extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         // 左側のアイコン

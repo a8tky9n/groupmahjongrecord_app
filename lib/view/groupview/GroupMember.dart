@@ -3,8 +3,8 @@ import 'package:groupmahjongrecord/view/groupview/UserScore.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-import 'package:groupmahjongrecord/models/Group.dart';
-import 'package:groupmahjongrecord/models/User.dart';
+import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'package:groupmahjongrecord/data/models/User.dart';
 import 'package:groupmahjongrecord/components/UserCard.dart';
 
 // メンバー一覧画面
@@ -47,11 +47,11 @@ class groupMemberPage extends State<GroupMember> {
           print(user);
           _user.add(
             User(
-                userId: user['id'],
-                name: user['first_name'],
-                imagePath: user['avatar'],
-                introduction: '',
-                rate: 1500),
+              userId: user['id'],
+              name: user['first_name'],
+              imagePath: user['avatar'],
+              introduction: '',
+            ),
           );
         }
       });
@@ -71,13 +71,18 @@ class groupMemberPage extends State<GroupMember> {
       children: <Widget>[
         if (_user.isNotEmpty)
           for (var user in _user)
-            buildRateCard(user.imagePath, user.name, user.userId, user.rate),
+            buildRateCard(
+              user.imagePath!,
+              user.name!,
+              user.userId!,
+              1500,
+            ),
       ],
     );
   }
 
   // ユーザーカード
-  Widget buildRateCard(String imageUrl, String title, int id, int rate) {
+  Widget buildRateCard(String imageUrl, String title, String id, int rate) {
     return SizedBox(
       height: 500,
       child: UserCard(

@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:groupmahjongrecord/models/Score.dart';
+import 'package:groupmahjongrecord/data/models/Score.dart';
 import 'package:groupmahjongrecord/components/ScoreCell.dart';
 
 class ScoreRow extends StatelessWidget {
@@ -24,7 +25,8 @@ class ScoreRow extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Text(
-                DateFormat('yyyy-M-d').format(score.createDate),
+                DateFormat('yyyy-M-d')
+                    .format((score.createDate as Timestamp).toDate()),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12.0),
               )),
@@ -32,7 +34,8 @@ class ScoreRow extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ScoreCell(
-                  userName: score.users[i].name, score: score.points[i]),
+                  userName: score.users![i].name.toString(),
+                  score: score.points![i].toInt()),
             ),
           const Divider(),
         ],

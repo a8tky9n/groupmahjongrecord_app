@@ -1,11 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'view/Login.dart';
-import 'view/Legalnotice.dart';
-import 'view/Contact.dart';
-import 'view/GroupList.dart';
-import 'view/groupview/GroupTop.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
 
 // エントリーポイント
 void main() async {
@@ -13,28 +12,27 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  log("Firebase初期化");
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
+  // final _appRouter = CustomRouterDelegate();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      initialRoute: '/',
-      routes: {
-        // 初期画面のclassを指定
-        '/': (context) => LoginPage(),
-        // 次ページのclassを指定
-        '/legalnotice': (context) => const Legalnotice(),
-        '/contact': (context) => Contact(),
-        '/groupList': (context) => GroupList(),
-      },
+      home: Router(
+        routerDelegate: SceneRouterDelegate(ref),
+      ),
     );
   }
 }
