@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -169,10 +170,10 @@ class contactMainPage extends ConsumerState<Contact> {
         // 左側のアイコン
         leading: IconButton(
           onPressed: () {
-            // ref
-            //     .read(sceneTitleProvider.notifier)
-            //     .update((state) => Scene.notice.name);
-            Navigator.pop(context);
+            ref
+                .read(sceneTitleProvider.notifier)
+                .update((state) => ref.watch(lastSceneProvider).name);
+            // Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),

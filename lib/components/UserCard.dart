@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UserCard extends StatelessWidget {
-  final String imgPath;
-  final String userName;
+  final String? imgPath;
+  final String? userName;
   final int userRate;
   final Function OnTapCallback;
   const UserCard({
@@ -29,23 +29,26 @@ class UserCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Image.network(
-                imgPath,
-                fit: BoxFit.contain,
-              ),
+              child: imgPath == null || imgPath!.isEmpty
+                  ? Image.asset('assets/no_image_square.jpeg',
+                      fit: BoxFit.contain)
+                  : Image.network(
+                      imgPath!,
+                      fit: BoxFit.contain,
+                    ),
             ),
             Expanded(
               child: Column(
                 children: [
                   const SizedBox(height: 3),
                   Text(
-                    userName,
+                    userName ?? "プレイヤー",
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 10,
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -65,7 +68,7 @@ class UserCard extends StatelessWidget {
         ),
       ),
       elevation: 5,
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
     );
   }
 }

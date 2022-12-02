@@ -30,6 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
+  flutter_localizations:
+    sdk: flutter
   # image_picker: ^0.8.4+4
   # crop_your_image: ^0.7.2
 
@@ -44,6 +46,9 @@ dependencies:
   freezed: ^2.2.1
   build_runner: ^2.3.2
   freezed_annotation: ^2.2.0
+  image_picker: ^0.8.6
+  fl_chart: ^0.55.0
+  date_time_picker: "^2.1.0"
   get:
 
 
@@ -52,10 +57,9 @@ dev_dependencies:
     sdk: flutter
 
   http: ^0.13.4
-  image_picker: ^0.8.4+4
+  image_picker: ^0.8.6
   crop_your_image: ^0.7.2
   badges: ^2.0.3
-  fl_chart: ^0.55.0
   firebase_auth: ^1.0.1
   flutter_secure_storage: ^6.0.0
 

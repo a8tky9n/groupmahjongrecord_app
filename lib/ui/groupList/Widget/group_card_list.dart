@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/main_viewmodel.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,7 +23,13 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
   @override
   Widget build(BuildContext context) {
     final sideMenuStatus = ref.watch(groupListViewModelProvider);
-    log(sideMenuStatus.loginUser.toString());
+    log("ログイン情報 : " + sideMenuStatus.loginUser.toString());
+    if (sideMenuStatus.loginUser == null) {
+      // ref
+      //     .read(sceneTitleProvider.notifier)
+      //     .update((state) => AppScene.top.name);
+      // sideMenuStatus.signOut();
+    }
     return GridView.count(
       // primary: false,
       shrinkWrap: true,
@@ -32,12 +40,13 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
         if (sideMenuStatus.loginUser != null &&
             sideMenuStatus.loginUser!.group!.isNotEmpty)
           for (var group in sideMenuStatus.loginUser!.group!)
-            buildImageCard(group.image!, group.title!, group.id!),
+            buildImageCard(group.image!, group.title!, group.id!, ref),
       ],
     );
   }
 
-  Widget buildImageCard(String imageUrl, String title, String id) {
+  Widget buildImageCard(
+      String imageUrl, String title, String id, WidgetRef ref) {
     log("タイトル名" + title);
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -46,20 +55,12 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
       ),
       child: InkWell(
         onTap: () {
-          // var group = Group(
-          //     groupId: id,
-          //     title: title,
-          //     img: imageUrl,
-          //     text: "ケチな点棒拾う気なし・・・！",
-          //     password: "");
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => GroupMain(
-          //       group: group,
-          //       user: _user,
-          //     ),
-          //   ),
-          // );
+          // MainViewmodl.setGroupId(id);
+          ref.read(groupIdProvider.notifier).state = id;
+          ref.read(lastSceneProvider.notifier).state = AppScene.groupList;
+          ref
+              .read(sceneTitleProvider.notifier)
+              .update((state) => AppScene.groupTop.name);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

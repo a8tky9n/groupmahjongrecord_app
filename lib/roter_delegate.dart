@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList.dart';
+import 'package:groupmahjongrecord/ui/groupTop/groupTop.dart';
 import 'package:groupmahjongrecord/ui/login/Login.dart';
 import 'package:groupmahjongrecord/view/Contact.dart';
 import 'package:groupmahjongrecord/view/Legalnotice.dart';
-import 'package:groupmahjongrecord/view/groupview/GroupTop.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum Scene {
+enum AppScene {
   top,
   notice,
   contact,
@@ -41,7 +41,7 @@ class SceneRouterDelegate extends RouterDelegate<void>
       key: _nestedNavigatorKey,
       pages: [
         MaterialPage(
-          arguments: Scene.top,
+          arguments: AppScene.top,
           child: LoginPage(),
         ),
         // if (ref.watch(showFugaPageProvider))
@@ -50,31 +50,31 @@ class SceneRouterDelegate extends RouterDelegate<void>
         //     arguments: Scene.groupList,
         //     child: GroupList(),
         //   ),
-        if (sceneTitle == Scene.top.name)
+        if (sceneTitle == AppScene.top.name)
           MaterialPage(
-            arguments: Scene.top,
+            arguments: AppScene.top,
             child: LoginPage(),
           ),
-        if (sceneTitle == Scene.contact.name)
+        if (sceneTitle == AppScene.contact.name)
           MaterialPage(
-            arguments: Scene.contact,
+            arguments: AppScene.contact,
             child: Contact(),
           ),
-        if (sceneTitle == Scene.notice.name)
+        if (sceneTitle == AppScene.notice.name)
           const MaterialPage(
-            arguments: Scene.notice,
+            arguments: AppScene.notice,
             child: Legalnotice(),
           ),
-        if (sceneTitle == Scene.groupList.name)
+        if (sceneTitle == AppScene.groupList.name)
           MaterialPage(
-            arguments: Scene.groupList,
+            arguments: AppScene.groupList,
             child: GroupList(),
           ),
-        // if (sceneTitle == Scene.groupTop.name)
-        //   MaterialPage(
-        //     arguments: Scene.groupTop,
-        //     child: GroupTop(),
-        //   ),
+        if (sceneTitle == AppScene.groupTop.name)
+          MaterialPage(
+            arguments: AppScene.groupTop,
+            child: GroupTop(),
+          ),
         // if (sceneTitle == Scene.recordScore.name)
         //   MaterialPage(
         //     arguments: Scene.recordScore,
@@ -92,7 +92,7 @@ class SceneRouterDelegate extends RouterDelegate<void>
         //   ),
       ],
       onPopPage: (route, result) {
-        final pageName = route.settings.arguments as Scene;
+        final pageName = route.settings.arguments as AppScene;
         log(pageName.name);
         ref.read(sceneTitleProvider.notifier).state = "";
         if (!route.didPop(result)) {
@@ -116,7 +116,5 @@ class SceneRouterDelegate extends RouterDelegate<void>
   @override
   Future<void> setNewRoutePath(void configuration) async {}
 }
-
-// final lastSceneProvider = StateProvider<String>((ref) => "");
 
 final sceneTitleProvider = StateProvider<String>((ref) => "");

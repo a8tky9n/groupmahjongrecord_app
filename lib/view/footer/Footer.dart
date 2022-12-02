@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,9 +18,12 @@ class Footer extends ConsumerWidget {
             textStyle: const TextStyle(fontSize: 12),
           ),
           onPressed: () {
+            ref.read(lastSceneProvider.notifier).state = provider.isEmpty
+                ? AppScene.top
+                : AppScene.values.byName(provider);
             ref
                 .read(sceneTitleProvider.notifier)
-                .update((state) => Scene.contact.name);
+                .update((state) => AppScene.contact.name);
             // Navigator.pushNamed(context, '/contact');
           },
           child: const Text('お問い合わせ'),
@@ -29,9 +33,12 @@ class Footer extends ConsumerWidget {
             textStyle: const TextStyle(fontSize: 12),
           ),
           onPressed: () {
+            ref.read(lastSceneProvider.notifier).state = provider.isEmpty
+                ? AppScene.top
+                : AppScene.values.byName(provider);
             ref
                 .read(sceneTitleProvider.notifier)
-                .update((state) => Scene.notice.name);
+                .update((state) => AppScene.notice.name);
             // Navigator.pushNamed(context, '/legalnotice');
           },
           child: const Text('免責事項'),

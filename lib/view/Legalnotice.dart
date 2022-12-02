@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -54,7 +55,9 @@ class Legalnotice extends ConsumerWidget {
         // 左側のアイコン
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            ref
+                .read(sceneTitleProvider.notifier)
+                .update((state) => ref.watch(lastSceneProvider).name);
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),

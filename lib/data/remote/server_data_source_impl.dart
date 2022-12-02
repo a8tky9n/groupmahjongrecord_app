@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:groupmahjongrecord/data/models/Group.dart';
 import 'package:groupmahjongrecord/data/remote/server_data_source.dart';
 import 'package:logger/logger.dart';
 import 'dart:convert';
@@ -54,7 +55,6 @@ class ServerImpl implements Server {
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
         var res = jsonDecode(response.body) as Map<String, dynamic>;
-        log("グループ" + utf8.decode(res['group']).toString());
         final user = LoginUser.fromJson(res);
         return user;
       } else {
@@ -91,39 +91,34 @@ class ServerImpl implements Server {
     }
   }
 
-  // @override
-  // Future<List<UserInfo.User>> getAllUserInfo() async {
-  //   try {
-  //     var url = Uri(
-  //         scheme: ServerInfo.protocol,
-  //         host: ServerInfo.host,
-  //         port: 8000,
-  //         path: '/api/users/all_users');
-  //     var JWT = await _auth.currentUser!.getIdToken(true);
-  //     Map<String, String> headers = {
-  //       // 'content-type': 'application/json',
-  //       'Authorization': 'Bearer ' + JWT
-  //     };
-  //     var response = await http.get(url, headers: headers);
-  //     var users = <UserInfo.User>{};
-  //     if (response.statusCode == 200) {
-  //       var data = jsonDecode(response.body) as Map<String, dynamic>;
-  //       for (var datum in data) {
-  //         users.add(UserInfo.User.fromJson(datum));
-  //       }
-  //       return users;
-  //     } else {
-  //       _logger.d(response.body);
-  //     }
-  //   } catch (e) {
-  //     _logger.d(e);
-  //   }
-  //   return null;
-  // }
-  // @override
-  // Future<User> getUserInfo(String userId);
-  // @override
-  // Future<Group> createGroup(Map<String, dynamic> data);
+  // グループ取得
+  @override
+  Future<List<dynamic>?> getGroup(String gId) async {
+    try {
+      var url = Uri(
+          scheme: ServerInfo.protocol,
+          host: ServerInfo.host,
+          port: ServerInfo.port,
+          path: '/api/groups/get_selected_group',
+          queryParameters: {"group_id": gId});
+      var JWT = await _auth.currentUser!.getIdToken(true);
+      Map<String, String> headers = {
+        // 'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + JWT,
+      };
+      var response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        log("レスポンス" + response.body);
+        var res = jsonDecode(response.body) as List<dynamic>;
+        return res;
+      } else {
+        _logger.d(response.body);
+      }
+    } catch (e) {
+      _logger.d(e);
+    }
+    return null;
+  }
 }
 
 class ServerInfo {

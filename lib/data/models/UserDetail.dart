@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-
-@immutable
 class UserDetail {
   String? userId;
   String? group_id;

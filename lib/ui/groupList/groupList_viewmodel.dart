@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
@@ -25,8 +26,9 @@ class GroupListViewModel extends ChangeNotifier {
   String? password;
   String? description;
   File? groupImage;
-
+  // ユーザー情報
   LoginUser? loginUser;
+  bool isloading = false;
   // ユーザー情報取得
   Future<void> getLoginUser() async {
     loginUser = await _repository.getMe();

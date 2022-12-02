@@ -18,15 +18,15 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
           final scene = ref.watch(sceneTitleProvider);
           final provider = ref.watch(loginViewModelProvider);
           if (provider.signInComplete()) {
-            log("ログイン完了している");
             log(provider.getUser().toString());
             final jwt = provider.getUser().getIdToken(true);
             jwt.then(
               (value) {
-                log(value);
+                log("jwt : " + value);
+                // log(value);
                 ref
                     .read(sceneTitleProvider.notifier)
-                    .update((state) => Scene.groupList.name);
+                    .update((state) => AppScene.groupList.name);
               },
             );
           }
@@ -193,7 +193,7 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
         log(value);
         ref
             .read(sceneTitleProvider.notifier)
-            .update((state) => Scene.groupList.name);
+            .update((state) => AppScene.groupList.name);
       });
     }
   }

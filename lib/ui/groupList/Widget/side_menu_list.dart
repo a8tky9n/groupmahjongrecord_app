@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
-import 'package:groupmahjongrecord/ui/groupList/Widget/profileEditDialog.dart';
+import 'package:groupmahjongrecord/ui/groupList/Widget/profile_edit_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -79,9 +82,11 @@ class LoginSideMenuState extends ConsumerState<LoginSideMenu> {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        ref.read(lastSceneProvider.notifier).state =
+                            AppScene.groupList;
                         ref
                             .read(sceneTitleProvider.notifier)
-                            .update((state) => Scene.top.name);
+                            .update((state) => AppScene.top.name);
                         // Navigator.of(context).pushReplacementNamed("/");
                         sideMenuStatus.signOut();
                       },
