@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/ui/groupTop/Widget/create_game_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupTop/Widget/member_list.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -48,7 +49,13 @@ class RecordScoreState extends ConsumerState<RecordScore> {
             primary: Colors.orange,
             onPrimary: Colors.white,
           ),
-          onPressed: groupViewModel.positions.isNotEmpty ? null : () {},
+          onPressed: groupViewModel.positions.isNotEmpty
+              ? null
+              : () {
+                  showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => CreateGameDialog());
+                },
         ),
       ],
     );

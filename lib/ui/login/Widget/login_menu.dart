@@ -133,11 +133,13 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
                 onPressed: () {
                   _formKey.currentState!.validate();
                   final login = ref.read(loginViewModelProvider);
-                  if (login.email!.isNotEmpty && login.password!.isNotEmpty) {
-                    log("サインインの前まで来たよ");
+                  if (login.email != null &&
+                      login.email!.isNotEmpty &&
+                      login.password != null &&
+                      login.password!.isNotEmpty) {
                     signin(login);
                   } else {
-                    log("サインインしない");
+                    null;
                   }
                 },
               ),

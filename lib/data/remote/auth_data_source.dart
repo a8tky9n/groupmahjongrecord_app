@@ -7,7 +7,9 @@ abstract class AuthDataSource {
   User? getUser();
   Future<void> signIn(
       String eMail, String pass, BuildContext ctx, Function(String) eCallback);
-  Future<void> signOn(String eMail, String pass, BuildContext ctx);
-  Future<void> forgetPass(String eMail, BuildContext ctx);
+  Future<void> signOn(
+      String eMail, String pass, BuildContext ctx, Function(String) eCallback);
+  Future<void> forgetPass(
+      String eMail, BuildContext ctx, Function(String) eCallback);
   Future<void> signOut();
 }

@@ -49,6 +49,8 @@ dependencies:
   image_picker: ^0.8.6
   fl_chart: ^0.55.0
   date_time_picker: "^2.1.0"
+  uuid: ^3.0.7
+  collection: ^1.16.0
   get:
 
 
@@ -61,7 +63,6 @@ dev_dependencies:
   crop_your_image: ^0.7.2
   badges: ^2.0.3
   firebase_auth: ^1.0.1
-  flutter_secure_storage: ^6.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

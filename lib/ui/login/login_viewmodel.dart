@@ -1,31 +1,31 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/data/provider/server_repository_provider.dart';
+import 'package:groupmahjongrecord/data/repository/server_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:groupmahjongrecord/data/repository/auth_repository.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
 
 final loginViewModelProvider =
-    ChangeNotifierProvider.autoDispose<LoginViewModel>(
-        (ref) => LoginViewModel(repository: ref.read(authRepositoryProvider)));
+    ChangeNotifierProvider.autoDispose<LoginViewModel>((ref) => LoginViewModel(
+        repository: ref.read(authRepositoryProvider),
+        server: ref.read(serverRepositoryProvider)));
 
 class LoginViewModel extends ChangeNotifier {
-  LoginViewModel({required repository}) : _repository = repository;
+  LoginViewModel({required repository, required server})
+      : _repository = repository,
+        _server = server;
 
   final AuthRepository _repository;
+  final ServerRepository _server;
 
   //mutable
-  String? status;
   String? email;
   String? password;
   String? confPassword;
   int? loginStatus;
-
-  void updateStatus(String message) {
-    status = message;
-    notifyListeners();
-  }
 
   Future<void> signIn(BuildContext context, Function(String) errorCallback) {
     var res = _repository.signIn(email!, password!, context, errorCallback);
@@ -34,16 +34,23 @@ class LoginViewModel extends ChangeNotifier {
     return res;
   }
 
-  Future<void> signOn(BuildContext context) {
-    return _repository.signOn(email!, password!, context);
+  Future<void> signOn(BuildContext context, Function(String) errorCallback) {
+    var res = _repository.signOn(email!, password!, context, errorCallback);
+    notifyListeners();
+    return res;
   }
 
-  Future<void> forgetPassword(BuildContext context) {
-    return _repository.forgetPass(password!, context);
+  Future<void> forgetPassword(
+      BuildContext context, Function(String) errorCallback) {
+    return _repository.forgetPass(password!, context, errorCallback);
   }
 
   Future<void> signOut() {
     return _repository.signOut();
+  }
+
+  Future<void> registerId() {
+    return _server.resisterUserId(true);
   }
 
   void setEmail(String value) {

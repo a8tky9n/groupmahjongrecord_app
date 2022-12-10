@@ -24,12 +24,7 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
   Widget build(BuildContext context) {
     final sideMenuStatus = ref.watch(groupListViewModelProvider);
     log("ログイン情報 : " + sideMenuStatus.loginUser.toString());
-    if (sideMenuStatus.loginUser == null) {
-      // ref
-      //     .read(sceneTitleProvider.notifier)
-      //     .update((state) => AppScene.top.name);
-      // sideMenuStatus.signOut();
-    }
+
     return GridView.count(
       // primary: false,
       shrinkWrap: true,

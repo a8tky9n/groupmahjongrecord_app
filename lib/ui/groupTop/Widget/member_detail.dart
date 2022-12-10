@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/data/models/Game.dart';
 import 'package:groupmahjongrecord/data/models/UserScore.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:collection/collection.dart';
 
 const gridColor = Color(0xff68739f);
 const titleColor = Color(0xff8c95db);
@@ -42,7 +44,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
     int index = 0;
     double average = 0;
     for (var game in games!) {
-      var result = game.gameResults!.firstWhere(
+      GameResults? result = game.gameResults!.firstWhereOrNull(
           (res) => res.profile == ref.watch(groupViewModelProvider).detailId);
       if (result != null) {
         average += result.rank!;
@@ -87,7 +89,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                catMsg[itemIndex],
+                catMsg[itemIndex - 1],
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
@@ -96,7 +98,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
                 width: 100,
                 child: Ink.image(
                   image: NetworkImage(
-                    catImg[itemIndex],
+                    catImg[itemIndex - 1],
                   ),
                   fit: BoxFit.contain,
                 ),
@@ -261,7 +263,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
     int index = 0;
     List<int> RankArray = <int>[];
     for (var game in games) {
-      var result = game.gameResults!.firstWhere(
+      var result = game.gameResults!.firstWhereOrNull(
           (res) => res.profile == ref.watch(groupViewModelProvider).detailId);
       if (result != null) {
         RankArray.add(result.rank!);
@@ -369,7 +371,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
               width: 80,
               child: Center(
                 child: Text(
-                  detailScore.averageScore!.toString(),
+                  detailScore.averageScore!.toStringAsFixed(2),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -395,7 +397,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
             width: 80,
             child: Center(
               child: Text(
-                detailScore.averageRank!.toString(),
+                detailScore.averageRank!.toStringAsFixed(2),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -474,7 +476,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
               width: 80,
               child: Center(
                 child: Text(
-                  detailScore.topAverage!.toString() + '%',
+                  detailScore.topAverage!.toStringAsFixed(2) + '%',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -483,7 +485,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
               width: 80,
               child: Center(
                 child: Text(
-                  detailScore.avoidButtomAverage!.toString() + '%',
+                  detailScore.avoidButtomAverage!.toStringAsFixed(2) + '%',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -492,7 +494,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
               width: 80,
               child: Center(
                 child: Text(
-                  detailScore.plusAverage!.toString() + '%',
+                  detailScore.plusAverage!.toStringAsFixed(2) + '%',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

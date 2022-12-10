@@ -21,13 +21,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> signOn(String eMail, String pass, BuildContext ctx) {
-    return _dataSource.signOn(eMail, pass, ctx);
+  Future<void> signOn(
+      String eMail, String pass, BuildContext ctx, Function(String) eCallback) {
+    return _dataSource.signOn(eMail, pass, ctx, eCallback);
   }
 
   @override
-  Future<void> forgetPass(String pass, BuildContext ctx) {
-    return _dataSource.forgetPass(pass, ctx);
+  Future<void> forgetPass(
+      String pass, BuildContext ctx, Function(String) eCallback) {
+    return _dataSource.forgetPass(pass, ctx, eCallback);
   }
 
   @override

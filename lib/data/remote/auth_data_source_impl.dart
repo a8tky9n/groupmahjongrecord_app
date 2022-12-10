@@ -30,17 +30,23 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> signOn(String eMail, String pass, BuildContext context) async {
+  Future<void> signOn(String eMail, String pass, BuildContext context,
+      Function(String) eCallback) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: eMail, password: pass);
+    } on FirebaseAuthException catch (e) {
+      eCallback(exceptionMessage(e));
+      _logger.e(e.toString());
     } catch (e) {
+      eCallback("予期せぬエラーが発生しました。");
       _logger.e(e.toString());
     }
   }
 
   @override
-  Future<void> forgetPass(String eMail, BuildContext context) async {
+  Future<void> forgetPass(
+      String eMail, BuildContext context, Function(String) eCallback) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: eMail);
     } catch (e) {

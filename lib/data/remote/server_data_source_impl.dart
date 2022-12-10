@@ -14,7 +14,7 @@ class ServerImpl implements Server {
   final Logger _logger = Logger();
 
   @override
-  Future<bool> resisterUserId(String userId, bool isActive) async {
+  Future<bool> resisterUserId(bool isActive) async {
     try {
       var url = Uri(
         scheme: ServerInfo.protocol,
@@ -22,8 +22,8 @@ class ServerImpl implements Server {
         port: 8000,
         path: '/api/register',
       );
-      String body =
-          json.encode({'firebase_uid': userId, 'is_active': isActive});
+      String body = json.encode(
+          {'firebase_uid': _auth.currentUser!.uid, 'is_active': isActive});
       print('RequestBody : ${body}');
       var response = await http
           .post(url, body: body, headers: {"Content-Type": "application/json"});
@@ -79,8 +79,8 @@ class ServerImpl implements Server {
         'Content-type': 'application/json',
         'Authorization': 'Bearer ' + JWT,
       };
-      var response = await http.post(url,
-          headers: headers, body: utf8.encode(jsonEncode(json)));
+      var response =
+          await http.post(url, headers: headers, body: jsonEncode(json));
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
       } else {
@@ -103,7 +103,6 @@ class ServerImpl implements Server {
           queryParameters: {"group_id": gId});
       var JWT = await _auth.currentUser!.getIdToken(true);
       Map<String, String> headers = {
-        // 'Content-type': 'application/json',
         'Authorization': 'Bearer ' + JWT,
       };
       var response = await http.get(url, headers: headers);
@@ -118,6 +117,34 @@ class ServerImpl implements Server {
       _logger.d(e);
     }
     return null;
+  }
+
+  @override
+  Future<void> createGame(Map<String, dynamic> json) async {
+    try {
+      var url = Uri(
+          scheme: ServerInfo.protocol,
+          host: ServerInfo.host,
+          port: ServerInfo.port,
+          path: '/api/games/create_game/');
+      var JWT = await _auth.currentUser!.getIdToken(true);
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + JWT,
+      };
+      log("ポスト内容：" + jsonEncode(json));
+      var response =
+          await http.post(url, headers: headers, body: jsonEncode(json));
+      if (response.statusCode == 200) {
+        log("レスポンス" + response.body);
+      } else {
+        log("レスポンス：" + response.statusCode.toString());
+        log("レスポンス：" + response.headers.toString());
+        _logger.d(response.body);
+      }
+    } catch (e) {
+      _logger.d(e);
+    }
   }
 }
 

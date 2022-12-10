@@ -2,7 +2,7 @@ import 'package:groupmahjongrecord/data/models/Group.dart';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
 
 abstract class ServerRepository {
-  Future<bool> resisterUserId(String userId, bool isActive);
+  Future<bool> resisterUserId(bool isActive);
   // ユーザー関連
   Future<LoginUser?> getMe();
   // Future<Map> getAllUsers();
@@ -15,7 +15,7 @@ abstract class ServerRepository {
   Future<List<dynamic>?> getGroup(String userId);
   // Future<Map> getGroupMember();
   // // 対局関連
-  // Future<Map> createGame(String userId);
+  Future<void> createGame(Map<String, dynamic> json);
   // Future<Map> deleteGame(String userId);
   // Future<Map> getGame(String userId);
   // Future<Map> updateGame(String userId);

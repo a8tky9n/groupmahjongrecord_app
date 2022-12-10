@@ -10,6 +10,7 @@ import 'package:groupmahjongrecord/data/repository/server_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:groupmahjongrecord/data/repository/auth_repository.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
+import 'package:uuid/uuid.dart';
 
 final groupViewModelProvider =
     ChangeNotifierProvider.autoDispose<GroupViewModel>((ref) => GroupViewModel(
@@ -34,13 +35,19 @@ class GroupViewModel extends ChangeNotifier {
 
   DateTime? startDate;
   DateTime? endDate;
+  DateTime? recordDateTime;
 
   var positions = [1, 2, 3, 4];
-
+  List<double> scores = [0, 0, 0, 0];
+  bool scoreIsValid = false;
+  int aggregatedRate = 50;
   // ユーザー情報取得
   Future<void> getLoginUser() async {
+    log("ユーザー情報取得");
     loginUser = await _repository.getMe();
     notifyListeners();
+
+    log("ユーザー情報取得完了");
   }
 
   //グループ情報取得
@@ -162,12 +169,26 @@ class GroupViewModel extends ChangeNotifier {
   void setStartDate(DateTime time) {
     log("範囲設定先頭");
     startDate = time;
+    log(startDate.toString());
     createDetailUserScore();
   }
 
   void setEndDate(DateTime time) {
     log("範囲設定末尾");
     endDate = time;
+    endDate = endDate?.add(const Duration(
+        hours: 23,
+        minutes: 59,
+        seconds: 59,
+        milliseconds: 999,
+        microseconds: 999));
+
+    log(endDate.toString());
+    createDetailUserScore();
+  }
+
+  void setRecordDateTime(DateTime time) {
+    recordDateTime = time;
     createDetailUserScore();
   }
 
@@ -183,12 +204,75 @@ class GroupViewModel extends ChangeNotifier {
     detailId = '';
     notifyListeners();
   }
+
+  // 成績を設定する
+  void setScore(int position, double value) {
+    scores[position] = value;
+    double sum = 0;
+    for (double score in scores) {
+      sum += score;
+    }
+    if (sum != 0) {
+      scoreIsValid = true;
+    } else {
+      scoreIsValid = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> registerGame() async {
+    var uuid = Uuid();
+    var gameId = uuid.v4();
+    var json = {
+      'is_sanma': false,
+      'group_id': groupDetail!.id,
+      'game_results': [
+        {
+          "rank": 1,
+          "score": scores[0],
+          "game": gameId,
+          "profile": players!.firstWhere((p) => p.position == 1).user.id
+        },
+        {
+          "rank": 2,
+          "score": scores[1],
+          "game": gameId,
+          "profile": players!.firstWhere((p) => p.position == 2).user.id
+        },
+        {
+          "rank": 3,
+          "score": scores[2],
+          "game": gameId,
+          "profile": players!.firstWhere((p) => p.position == 3).user.id
+        },
+        {
+          "rank": 4,
+          "score": scores[3],
+          "game": gameId,
+          "profile": players!.firstWhere((p) => p.position == 4).user.id
+        }
+      ],
+    };
+    log("記録Post");
+    await _repository.createGame(json);
+    log("記録Post完了");
+    scores = [0, 0, 0, 0];
+    for (var player in players!) {
+      player.position = 0;
+    }
+    getGroup(groupDetail!.id!);
+    notifyListeners();
+  }
+
+  void setAggregatedRate(int value) {
+    aggregatedRate = value;
+    notifyListeners();
+  }
 }
 
 // 対局開始用のユーザークラス
 class Player {
   final Profiles user;
   int position;
-
   Player({required this.user, this.position = 0});
 }

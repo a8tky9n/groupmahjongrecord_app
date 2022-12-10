@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/components/snackbar.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:groupmahjongrecord/ui/login/login_viewmodel.dart';
 
@@ -85,9 +89,12 @@ class ForgetPasswordMenuStatus extends ConsumerState<ForgetPasswordMenu> {
                 ),
                 onPressed: () {
                   _formKey.currentState!.validate();
-                  if (ref.read(loginViewModelProvider).email!.isNotEmpty) {
+                  var provider = ref.read(loginViewModelProvider);
+                  if (provider.email != null && provider.email!.isNotEmpty) {
                     // アカウント作成
-                    // _createUid();
+                    // signOn(provider);
+                  } else {
+                    null;
                   }
                 },
               ),

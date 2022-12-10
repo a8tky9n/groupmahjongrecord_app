@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/components/ScoreHeader.dart';
 import 'package:groupmahjongrecord/components/ScoreRow.dart';
-import 'package:groupmahjongrecord/data/models/Game.dart';
 import 'package:groupmahjongrecord/data/models/UserScore.dart';
+import 'package:groupmahjongrecord/ui/groupTop/Widget/aggregated_data_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 
 class GroupScore extends ConsumerWidget {
@@ -152,13 +151,13 @@ class GroupScore extends ConsumerWidget {
             SizedBox(
               width: 90,
               child: Center(
-                child: Text(score.averageScore.toString()),
+                child: Text(score.averageScore!.toStringAsFixed(2)),
               ),
             ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(score.averageRank.toString()),
+                child: Text(score.averageRank!.toStringAsFixed(2)),
               ),
             ),
             SizedBox(
@@ -194,19 +193,19 @@ class GroupScore extends ConsumerWidget {
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(score.topAverage.toString()),
+                child: Text(score.topAverage!.toStringAsFixed(2)),
               ),
             ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(score.plusAverage.toString()),
+                child: Text(score.plusAverage!.toStringAsFixed(2)),
               ),
             ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(score.avoidButtomAverage.toString()),
+                child: Text(score.avoidButtomAverage!.toStringAsFixed(2)),
               ),
             ),
           ],
@@ -232,7 +231,7 @@ class GroupScore extends ConsumerWidget {
     );
   }
 
-  Widget _calender(WidgetRef ref) {
+  Widget _calender(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -296,7 +295,13 @@ class GroupScore extends ConsumerWidget {
         SizedBox(
           width: 20,
         ),
-        OutlinedButton(onPressed: () => {}, child: Text("集計"))
+        OutlinedButton(
+            onPressed: () => {
+                  showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AggregatedDataDialog())
+                },
+            child: Text("集計"))
       ],
     );
   }
@@ -321,20 +326,20 @@ class GroupScore extends ConsumerWidget {
       child: Scrollbar(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Expanded(
-            child: Column(
-              children: <Widget>[
-                const ScoreHeader(),
-                const Divider(),
-                for (int i = 0; i < fillterdGames!.length; i++)
-                  // for (var score in game.gameResults!)
-                  ScoreRow(
-                    scores: fillterdGames[i].gameResults!,
-                    OnTapCallback: () => {},
-                  ),
-              ],
-            ),
+          // child: Expanded(
+          child: Column(
+            children: <Widget>[
+              const ScoreHeader(),
+              const Divider(),
+              for (int i = 0; i < fillterdGames!.length; i++)
+                // for (var score in game.gameResults!)
+                ScoreRow(
+                  scores: fillterdGames[i].gameResults!,
+                  OnTapCallback: () => {},
+                ),
+            ],
           ),
+          // ),
         ),
       ),
     );
@@ -354,7 +359,7 @@ class GroupScore extends ConsumerWidget {
         const SizedBox(
           height: 20,
         ),
-        _calender(ref),
+        _calender(context, ref),
         const SizedBox(
           height: 20,
         ),

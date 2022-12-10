@@ -16,9 +16,6 @@ enum AppScene {
   contact,
   groupList,
   groupTop,
-  recordScore,
-  member,
-  groupScore,
 }
 
 // これをローカルに宣言してしまうと画面遷移アニメーションが表示されないようになってしまいます。
@@ -44,12 +41,6 @@ class SceneRouterDelegate extends RouterDelegate<void>
           arguments: AppScene.top,
           child: LoginPage(),
         ),
-        // if (ref.watch(showFugaPageProvider))
-        //   MaterialPage(
-        //     // nameというプロパティも存在しますが、こちらはルートのnameなのでどの画面かという情報を渡すには適していないと思われます。
-        //     arguments: Scene.groupList,
-        //     child: GroupList(),
-        //   ),
         if (sceneTitle == AppScene.top.name)
           MaterialPage(
             arguments: AppScene.top,
@@ -75,21 +66,6 @@ class SceneRouterDelegate extends RouterDelegate<void>
             arguments: AppScene.groupTop,
             child: GroupTop(),
           ),
-        // if (sceneTitle == Scene.recordScore.name)
-        //   MaterialPage(
-        //     arguments: Scene.recordScore,
-        //     child: Contact(),
-        //   ),
-        // if (sceneTitle == Scene.member.name)
-        //   MaterialPage(
-        //     arguments: Scene.member,
-        //     child: Contact(),
-        //   ),
-        // if (sceneTitle == Scene.groupScore.name)
-        //   MaterialPage(
-        //     arguments: Scene.groupScore,
-        //     child: Contact(),
-        //   ),
       ],
       onPopPage: (route, result) {
         final pageName = route.settings.arguments as AppScene;
@@ -98,16 +74,6 @@ class SceneRouterDelegate extends RouterDelegate<void>
         if (!route.didPop(result)) {
           return false;
         }
-        // switch (pageName) {
-        //   case Scene.fugaPage:
-        //     ref.read(showFugaPageProvider.notifier).state = false;
-        //     break;
-        //   case Scene.fooPage:
-        //     ref.read(sceneTitleProvider.notifier).state = "";
-        //     break;
-        //   default:
-        //     break;
-        // }
         return true;
       },
     );

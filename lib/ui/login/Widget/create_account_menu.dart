@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:groupmahjongrecord/components/snackbar.dart';
+import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:groupmahjongrecord/ui/login/login_viewmodel.dart';
 
@@ -155,14 +159,17 @@ class CreateAccountMenuState extends ConsumerState<CreateAccountMenu> {
                 ),
                 onPressed: () {
                   _formKey.currentState!.validate();
-                  if (ref.read(loginViewModelProvider).email!.isNotEmpty &&
-                      ref.read(loginViewModelProvider).password!.isNotEmpty &&
-                      ref
-                          .read(loginViewModelProvider)
-                          .confPassword!
-                          .isNotEmpty) {
+                  var provider = ref.read(loginViewModelProvider);
+                  if (provider.email != null &&
+                      provider.email!.isNotEmpty &&
+                      provider.password != null &&
+                      provider.password!.isNotEmpty &&
+                      provider.confPassword != null &&
+                      provider.confPassword!.isNotEmpty) {
                     // アカウント作成
-                    // _createUid();
+                    signOn(provider);
+                  } else {
+                    null;
                   }
                 },
               ),
@@ -182,5 +189,40 @@ class CreateAccountMenuState extends ConsumerState<CreateAccountMenu> {
         ),
       ],
     );
+  }
+
+  Future<void> signOn(LoginViewModel login) async {
+    try {
+      log("サインインするよ");
+      await login.signOn(context, showErrorMessage);
+      // サインイン確認
+      await signOnComplete();
+      log("サインインしたよ");
+    } catch (e) {
+      log("サインインできなかったよ" + e.toString());
+    }
+  }
+
+  // サインオン完了
+  Future<void> signOnComplete() async {
+    final scene = ref.watch(sceneTitleProvider);
+    final provider = ref.watch(loginViewModelProvider);
+    if (provider.signInComplete()) {
+      log("サインイン完了している");
+      log(provider.getUser().toString());
+      provider.registerId();
+      final jwt = provider.getUser().getIdToken(true);
+      jwt.then((value) {
+        log(value);
+        ref
+            .read(sceneTitleProvider.notifier)
+            .update((state) => AppScene.groupList.name);
+      });
+    }
+  }
+
+  // メッセージ表示
+  void showErrorMessage(String eMsg) {
+    showErrorSnackbar(context: context, message: eMsg);
   }
 }
