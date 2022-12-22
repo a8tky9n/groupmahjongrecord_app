@@ -1,0 +1,12 @@
+//
+//  dev.xcconfig
+//  
+//
+//  Created by あさげ on 2022/12/18.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+FLAVOR=dev
+APP_ID_SUFFIX=.dev

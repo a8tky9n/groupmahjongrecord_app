@@ -17,9 +17,9 @@ class ServerImpl implements Server {
   Future<bool> resisterUserId(bool isActive) async {
     try {
       var url = Uri(
-        scheme: ServerInfo.protocol,
-        host: ServerInfo.host,
-        port: 8000,
+        scheme: environment['protocol'] as String,
+        host: environment['host'] as String,
+        port: environment['port'] as int,
         path: '/api/register',
       );
       String body = json.encode(
@@ -42,9 +42,9 @@ class ServerImpl implements Server {
   Future<LoginUser?> getMyInfo() async {
     try {
       var url = Uri(
-          scheme: ServerInfo.protocol,
-          host: ServerInfo.host,
-          port: 8000,
+          scheme: environment['protocol'] as String,
+          host: environment['host'] as String,
+          port: environment['port'] as int,
           path: '/api/users/me');
       var JWT = await _auth.currentUser!.getIdToken(true);
       Map<String, String> headers = {
@@ -70,9 +70,9 @@ class ServerImpl implements Server {
   Future<void> createGroup(Map<String, dynamic> json) async {
     try {
       var url = Uri(
-          scheme: ServerInfo.protocol,
-          host: ServerInfo.host,
-          port: ServerInfo.port,
+          scheme: environment['protocol'] as String,
+          host: environment['host'] as String,
+          port: environment['port'] as int,
           path: '/api/groups/create_groups');
       var JWT = await _auth.currentUser!.getIdToken(true);
       Map<String, String> headers = {
@@ -96,9 +96,9 @@ class ServerImpl implements Server {
   Future<List<dynamic>?> getGroup(String gId) async {
     try {
       var url = Uri(
-          scheme: ServerInfo.protocol,
-          host: ServerInfo.host,
-          port: ServerInfo.port,
+          scheme: environment['protocol'] as String,
+          host: environment['host'] as String,
+          port: environment['port'] as int,
           path: '/api/groups/get_selected_group',
           queryParameters: {"group_id": gId});
       var JWT = await _auth.currentUser!.getIdToken(true);
@@ -123,9 +123,9 @@ class ServerImpl implements Server {
   Future<void> createGame(Map<String, dynamic> json) async {
     try {
       var url = Uri(
-          scheme: ServerInfo.protocol,
-          host: ServerInfo.host,
-          port: ServerInfo.port,
+          scheme: environment['protocol'] as String,
+          host: environment['host'] as String,
+          port: environment['port'] as int,
           path: '/api/games/create_game/');
       var JWT = await _auth.currentUser!.getIdToken(true);
       Map<String, String> headers = {
@@ -148,8 +148,34 @@ class ServerImpl implements Server {
   }
 }
 
-class ServerInfo {
-  static String host = "192.168.0.160";
-  static String protocol = "http";
-  static int port = 8000;
-}
+// // 本番環境
+// class ServerInfo {
+//   static String host = "192.168.0.160";
+//   static String protocol = "http";
+//   static int port = 8000;
+// }
+
+// // 開発環境
+// class DevServerInfo extends ServerInfo {
+//   static String host = "192.168.0.160";
+//   static String protocol = "http";
+//   static int port = 8000;
+// }
+
+const String isProduction = String.fromEnvironment('FLAVOR');
+
+// 開発環境
+const VariablesDev = {
+  'host': "192.168.0.160",
+  'protocol': 'http',
+  'port': 8000
+};
+
+// 本番環境
+const VariablesProd = {
+  'host': "192.168.0.160",
+  'protocol': 'http',
+  'port': 8000
+};
+
+final environment = isProduction == 'prod' ? VariablesProd : VariablesDev;
