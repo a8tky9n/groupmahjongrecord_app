@@ -18,7 +18,6 @@ enum AppScene {
   groupTop,
 }
 
-// これをローカルに宣言してしまうと画面遷移アニメーションが表示されないようになってしまいます。
 final GlobalKey<NavigatorState> _nestedNavigatorKey =
     GlobalKey<NavigatorState>();
 

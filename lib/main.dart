@@ -24,7 +24,6 @@ void main() async {
 
 class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
-  // final _appRouter = CustomRouterDelegate();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(

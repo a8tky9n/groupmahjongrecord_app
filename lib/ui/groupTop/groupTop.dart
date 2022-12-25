@@ -27,7 +27,6 @@ class GroupTopState extends ConsumerState<GroupTop> {
       provider.getGroup(groupId);
       provider.detailId = "";
     });
-    // _getScoreList();
   }
 
   Widget _bottomNavigation() {

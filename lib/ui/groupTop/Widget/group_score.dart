@@ -250,7 +250,7 @@ class GroupScore extends ConsumerWidget {
             },
             onChanged: (val) => ref
                 .watch(groupViewModelProvider)
-                .setStartDate(DateTime.parse(val!)),
+                .setStartDate(DateTime.parse(val)),
             validator: (val) {
               // print(val);
               return null;
@@ -282,7 +282,7 @@ class GroupScore extends ConsumerWidget {
             },
             onChanged: (val) => ref
                 .watch(groupViewModelProvider)
-                .setEndDate(DateTime.parse(val!)),
+                .setEndDate(DateTime.parse(val)),
             validator: (val) {
               // print(val);
               return null;

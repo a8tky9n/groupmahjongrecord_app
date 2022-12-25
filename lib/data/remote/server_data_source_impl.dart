@@ -173,8 +173,8 @@ const VariablesDev = {
 
 // 本番環境
 const VariablesProd = {
-  'host': "192.168.0.160",
-  'protocol': 'http',
+  'host': "43.207.20.40",
+  'protocol': 'https',
   'port': 8000
 };
 
