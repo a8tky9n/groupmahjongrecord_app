@@ -42,12 +42,12 @@ class GroupViewModel extends ChangeNotifier {
   bool scoreIsValid = false;
   int aggregatedRate = 50;
   // ユーザー情報取得
-  Future<void> getLoginUser() async {
-    log("ユーザー情報取得");
+  Future<void> getLoginUser(VoidCallback onFailed) async {
     loginUser = await _repository.getMe();
+    if (loginUser == null) {
+      onFailed();
+    }
     notifyListeners();
-
-    log("ユーザー情報取得完了");
   }
 
   //グループ情報取得

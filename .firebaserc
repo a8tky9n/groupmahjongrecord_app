@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "group-mahjong",
+    "prod": "groupmahjang",
+    "dev": "group-mahjong"
+  },
+  "targets": {},
+  "etags": {}
+}

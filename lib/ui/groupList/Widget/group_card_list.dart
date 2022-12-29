@@ -14,9 +14,11 @@ class GroupCardList extends StatefulHookConsumerWidget {
 class GroupCardListState extends ConsumerState<GroupCardList> {
   void initState() {
     super.initState();
-    Future(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = ref.watch(groupListViewModelProvider);
-      provider.getLoginUser();
+      provider.getLoginUser(() => ref
+          .read(sceneTitleProvider.notifier)
+          .update((state) => AppScene.top.name));
     });
   }
 

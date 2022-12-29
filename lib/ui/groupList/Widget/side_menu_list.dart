@@ -29,7 +29,11 @@ class LoginSideMenuState extends ConsumerState<LoginSideMenu> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                loginUser!.nickName ?? 'ぷれいやー',
+                loginUser == null ||
+                        loginUser!.nickName == null ||
+                        loginUser.nickName!.isEmpty
+                    ? 'ぷれいやー'
+                    : loginUser.nickName!,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -38,29 +42,15 @@ class LoginSideMenuState extends ConsumerState<LoginSideMenu> {
               currentAccountPicture: GestureDetector(
                 onTap: () => {ProfileEditDialog()},
                 child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(
-                    loginUser.image ??
-                        "https://1.bp.blogspot.com/-TpkVjESR3SM/X6tmgytYOTI/AAAAAAABcMM/twe_dbteoPM0Gfr6dCRVNKmRLZ-TWWLhgCNcBGAsYHQ/s795/souji_table_fuku_schoolboy.png",
-                  ),
-                ),
+                    backgroundColor: Colors.white,
+                    backgroundImage: loginUser != null &&
+                            loginUser.image != null &&
+                            loginUser.image!.isNotEmpty
+                        ? NetworkImage(loginUser.image!)
+                            as ImageProvider<Object>
+                        : AssetImage('assets/no_image_square.jpeg')),
               ),
             ),
-            // ListTile(
-            //   leading: Icon(Icons.grid_view),
-            //   title: const Text(
-            //     'グループリスト',
-            //     style: TextStyle(
-            //       fontSize: 14.0,
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            //   onTap: () {
-            //     ref
-            //         .read(sceneTitleProvider.notifier)
-            //         .update((state) => Scene.groupList.name);
-            //   },
-            // ),
             ListTile(
               leading: Icon(Icons.logout),
               title: const Text(

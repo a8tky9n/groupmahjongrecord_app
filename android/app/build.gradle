@@ -40,6 +40,13 @@ task copySources(type: Copy) {
 }
 tasks.whenTaskAdded { task ->
    task.dependsOn copySources
+   if (task.name == 'com.example.mahjong_app_flutter.dev' || task.name == 'com.example.mahjong_app_flutter') {
+        task.dependsOn selectGoogleServicesJson
+    }
+}
+task selectGoogleServicesJson(type: Copy) {
+    from "src/${dartEnvironmentVariables.FLAVOR}/google-services.json"
+    into './'
 }
 
 apply plugin: 'com.android.application'
@@ -67,10 +74,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.groupmahjongrecord"
+        applicationId "com.example.mahjong_app_flutter"
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         if (dartEnvironmentVariables.FLAVOR != 'prod') {
@@ -95,5 +103,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.multidex:multidex:2.0.1"
 }
-

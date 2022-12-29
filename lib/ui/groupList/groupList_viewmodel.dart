@@ -30,8 +30,11 @@ class GroupListViewModel extends ChangeNotifier {
   LoginUser? loginUser;
   bool isloading = false;
   // ユーザー情報取得
-  Future<void> getLoginUser() async {
+  Future<void> getLoginUser(VoidCallback onFailed) async {
     loginUser = await _repository.getMe();
+    if (loginUser == null) {
+      onFailed();
+    }
     notifyListeners();
   }
 

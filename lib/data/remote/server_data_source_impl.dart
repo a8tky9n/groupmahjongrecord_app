@@ -1,12 +1,10 @@
 import 'dart:developer';
-import 'package:groupmahjongrecord/data/models/Group.dart';
 import 'package:groupmahjongrecord/data/remote/server_data_source.dart';
 import 'package:logger/logger.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
-import 'dart:convert';
 
 class ServerImpl implements Server {
   ServerImpl({required auth}) : _auth = auth;
@@ -175,7 +173,7 @@ const VariablesDev = {
 const VariablesProd = {
   'host': "43.207.20.40",
   'protocol': 'https',
-  'port': 8000
+  'port': 42894
 };
 
 final environment = isProduction == 'prod' ? VariablesProd : VariablesDev;

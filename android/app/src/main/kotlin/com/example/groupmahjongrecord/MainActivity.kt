@@ -1,4 +1,4 @@
-package com.example.groupmahjongrecord
+package com.example.mahjong_app_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

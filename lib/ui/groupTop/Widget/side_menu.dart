@@ -16,9 +16,11 @@ class GroupSideMenu extends StatefulHookConsumerWidget {
 class GroupSideMenuState extends ConsumerState<GroupSideMenu> {
   void initState() {
     super.initState();
-    Future(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = ref.watch(groupViewModelProvider);
-      provider.getLoginUser();
+      provider.getLoginUser(() => ref
+          .read(sceneTitleProvider.notifier)
+          .update((state) => AppScene.top.name));
     });
   }
 
@@ -48,13 +50,11 @@ class GroupSideMenuState extends ConsumerState<GroupSideMenu> {
                 onTap: () => {ProfileEditDialog()},
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(
-                    loginUser == null ||
-                            loginUser.image == null ||
-                            loginUser.image!.isEmpty
-                        ? "https://1.bp.blogspot.com/-TpkVjESR3SM/X6tmgytYOTI/AAAAAAABcMM/twe_dbteoPM0Gfr6dCRVNKmRLZ-TWWLhgCNcBGAsYHQ/s795/souji_table_fuku_schoolboy.png"
-                        : loginUser.image!,
-                  ),
+                  backgroundImage: loginUser != null &&
+                          loginUser.image != null &&
+                          loginUser.image!.isNotEmpty
+                      ? NetworkImage(loginUser.image!) as ImageProvider<Object>
+                      : AssetImage('assets/no_image_square.jpeg'),
                 ),
               ),
             ),
