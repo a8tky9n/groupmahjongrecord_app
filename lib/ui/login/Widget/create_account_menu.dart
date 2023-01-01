@@ -209,15 +209,24 @@ class CreateAccountMenuState extends ConsumerState<CreateAccountMenu> {
     final provider = ref.watch(loginViewModelProvider);
     if (provider.signInComplete()) {
       log("サインイン完了している");
-      log(provider.getUser().toString());
-      provider.registerId();
-      final jwt = provider.getUser().getIdToken(true);
-      jwt.then((value) {
-        log(value);
+      log("Firebaseの情報 " + provider.getUser().toString());
+      await provider.registerId(() {
+        log("登録完了");
+        // 登録
         ref
             .read(sceneTitleProvider.notifier)
             .update((state) => AppScene.groupList.name);
+      }, () {
+        try {
+          // 削除
+          provider.getUser().delete();
+          log("Delete User");
+        } on NoSuchMethodError catch (e) {
+          log(e.toString());
+        }
       });
+    } else {
+      log("まだ完了していない");
     }
   }
 

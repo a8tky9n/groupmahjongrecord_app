@@ -25,6 +25,7 @@ class ServerImpl implements Server {
       print('RequestBody : ${body}');
       var response = await http
           .post(url, body: body, headers: {"Content-Type": "application/json"});
+      print("アカウント作成結果: " + response.statusCode.toString());
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -51,8 +52,11 @@ class ServerImpl implements Server {
       };
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        log("レスポンス" + response.body);
-        var res = jsonDecode(response.body) as Map<String, dynamic>;
+        // log("レスポンス " + response.body);
+        // log("レスポンス(UTF8) " + utf8.decode(response.body.codeUnits));
+        var res = jsonDecode(utf8.decode(response.body.codeUnits))
+            as Map<String, dynamic>;
+        log("レスポンス " + res.toString());
         final user = LoginUser.fromJson(res);
         return user;
       } else {
@@ -77,8 +81,10 @@ class ServerImpl implements Server {
         'Content-type': 'application/json',
         'Authorization': 'Bearer ' + JWT,
       };
-      var response =
-          await http.post(url, headers: headers, body: jsonEncode(json));
+      log("JSON " + jsonEncode(json));
+      log("JSON(UTF8) " + utf8.encode(jsonEncode(json)).toString());
+      var response = await http.post(url,
+          headers: headers, body: utf8.encode(jsonEncode(json)));
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
       } else {
@@ -87,6 +93,7 @@ class ServerImpl implements Server {
     } catch (e) {
       _logger.d(e);
     }
+    return;
   }
 
   // グループ取得
@@ -106,7 +113,8 @@ class ServerImpl implements Server {
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
-        var res = jsonDecode(response.body) as List<dynamic>;
+        var res =
+            jsonDecode(utf8.decode(response.body.codeUnits)) as List<dynamic>;
         return res;
       } else {
         _logger.d(response.body);
@@ -173,7 +181,7 @@ const VariablesDev = {
 const VariablesProd = {
   'host': "43.207.20.40",
   'protocol': 'https',
-  'port': 42894
+  'port': 443
 };
 
 final environment = isProduction == 'prod' ? VariablesProd : VariablesDev;

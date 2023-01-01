@@ -49,18 +49,39 @@ class LoginViewModel extends ChangeNotifier {
     return _repository.signOut();
   }
 
-  Future<void> registerId() {
-    return _server.resisterUserId(true);
+  // アカウント登録
+  Future<void> registerId(
+      VoidCallback successCallback, VoidCallback errorCallback) async {
+    bool isSuccess = await _server.resisterUserId(true);
+    log("アカウント登録完了");
+    if (isSuccess) {
+      log("アカウント登録成功");
+      successCallback();
+    } else {
+      log("アカウント登録失敗");
+      errorCallback();
+    }
+    notifyListeners();
+    return;
+  }
+
+  // ログインしているかどうか
+  Future<bool> isRegistered() async {
+    if (await _server.getMe() != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void setEmail(String value) {
-    log("email:" + value);
+    // log("email:" + value);
     email = value;
   }
 
   void setPass(String value) {
     password = value;
-    log("pass:" + value);
+    // log("pass:" + value);
   }
 
   void setConfPass(String value) {

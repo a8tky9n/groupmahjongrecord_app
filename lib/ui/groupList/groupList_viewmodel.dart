@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:convert';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
 import 'package:groupmahjongrecord/data/provider/server_repository_provider.dart';
@@ -33,7 +34,10 @@ class GroupListViewModel extends ChangeNotifier {
   Future<void> getLoginUser(VoidCallback onFailed) async {
     loginUser = await _repository.getMe();
     if (loginUser == null) {
+      log("ユーザー情報がNull");
       onFailed();
+    } else {
+      log("ユーザー情報がNullでない");
     }
     notifyListeners();
   }

@@ -19,6 +19,7 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
       provider.getLoginUser(() => ref
           .read(sceneTitleProvider.notifier)
           .update((state) => AppScene.top.name));
+      log("ビルト後ログイン情報 : " + provider.loginUser.toString());
     });
   }
 

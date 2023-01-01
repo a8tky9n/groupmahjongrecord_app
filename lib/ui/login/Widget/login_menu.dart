@@ -18,15 +18,18 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
           final scene = ref.watch(sceneTitleProvider);
           final provider = ref.watch(loginViewModelProvider);
           if (provider.signInComplete()) {
-            log(provider.getUser().toString());
+            log("User" + provider.getUser().toString());
             final jwt = provider.getUser().getIdToken(true);
             jwt.then(
               (value) {
-                log("jwt : " + value);
-                // log(value);
-                ref
-                    .read(sceneTitleProvider.notifier)
-                    .update((state) => AppScene.groupList.name);
+                final isRegistered = provider.isRegistered();
+                isRegistered.then((val) {
+                  if (val) {
+                    ref
+                        .read(sceneTitleProvider.notifier)
+                        .update((state) => AppScene.groupList.name);
+                  }
+                });
               },
             );
           }
@@ -192,10 +195,14 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
       log(provider.getUser().toString());
       final jwt = provider.getUser().getIdToken(true);
       jwt.then((value) {
-        log(value);
-        ref
-            .read(sceneTitleProvider.notifier)
-            .update((state) => AppScene.groupList.name);
+        final isRegistered = provider.isRegistered();
+        isRegistered.then((value) {
+          if (value) {
+            ref
+                .read(sceneTitleProvider.notifier)
+                .update((state) => AppScene.groupList.name);
+          }
+        });
       });
     }
   }

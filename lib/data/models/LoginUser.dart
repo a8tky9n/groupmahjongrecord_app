@@ -1,4 +1,5 @@
 import 'package:groupmahjongrecord/data/models/Group.dart';
+import 'dart:convert';
 
 class LoginUser {
   LoginUser(
