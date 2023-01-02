@@ -41,6 +41,7 @@ class GroupViewModel extends ChangeNotifier {
   List<double> scores = [0, 0, 0, 0];
   bool scoreIsValid = false;
   int aggregatedRate = 50;
+  int horseRate = 5;
   // ユーザー情報取得
   Future<void> getLoginUser(VoidCallback onFailed) async {
     loginUser = await _repository.getMe();
@@ -229,25 +230,25 @@ class GroupViewModel extends ChangeNotifier {
       'game_results': [
         {
           "rank": 1,
-          "score": scores[0],
+          "score": scores[0] + horseRate * 2,
           "game": gameId,
           "profile": players!.firstWhere((p) => p.position == 1).user.id
         },
         {
           "rank": 2,
-          "score": scores[1],
+          "score": scores[1] + horseRate,
           "game": gameId,
           "profile": players!.firstWhere((p) => p.position == 2).user.id
         },
         {
           "rank": 3,
-          "score": scores[2],
+          "score": scores[2] - horseRate,
           "game": gameId,
           "profile": players!.firstWhere((p) => p.position == 3).user.id
         },
         {
           "rank": 4,
-          "score": scores[3],
+          "score": scores[3] - horseRate * 2,
           "game": gameId,
           "profile": players!.firstWhere((p) => p.position == 4).user.id
         }
@@ -257,6 +258,7 @@ class GroupViewModel extends ChangeNotifier {
     await _repository.createGame(json);
     log("記録Post完了");
     scores = [0, 0, 0, 0];
+    positions = [1, 2, 3, 4];
     for (var player in players!) {
       player.position = 0;
     }

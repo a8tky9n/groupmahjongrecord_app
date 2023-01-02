@@ -54,7 +54,7 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
         ),
         SizedBox(
           height: 50,
-          width: 100,
+          width: 90,
           child: TextFormField(
             decoration: const InputDecoration(
               hintText: '0.0',
@@ -116,6 +116,52 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
                   ),
                 ),
                 for (int i = 0; i < 4; i++) _player(i + 1),
+                // ウマ
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "0",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Radio(
+                      activeColor: Colors.blue,
+                      value: 0,
+                      groupValue: provider.horseRate,
+                      onChanged: (value) =>
+                          provider.setAggregatedRate(value as int),
+                      autofocus: true,
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    const Text(
+                      "5-10",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Radio(
+                      activeColor: Colors.blue,
+                      value: 5,
+                      groupValue: provider.horseRate,
+                      onChanged: (value) =>
+                          provider.setAggregatedRate(value as int),
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    const Text(
+                      "10-20",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Radio(
+                      activeColor: Colors.blue,
+                      value: 10,
+                      groupValue: provider.horseRate,
+                      onChanged: (value) =>
+                          provider.setAggregatedRate(value as int),
+                    ),
+                  ],
+                ),
               ],
             )
           ],

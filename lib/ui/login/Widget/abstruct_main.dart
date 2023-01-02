@@ -233,7 +233,7 @@ class AbstructPage extends State<Abstruct> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'ウマは5-10、10-20、10-30から選択します。',
+                  'ウマは無し、5-10、10-20から選択します。',
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 10),

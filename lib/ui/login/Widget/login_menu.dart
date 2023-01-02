@@ -22,6 +22,7 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
             final jwt = provider.getUser().getIdToken(true);
             jwt.then(
               (value) {
+                log(value);
                 final isRegistered = provider.isRegistered();
                 isRegistered.then((val) {
                   if (val) {
@@ -195,6 +196,7 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
       log(provider.getUser().toString());
       final jwt = provider.getUser().getIdToken(true);
       jwt.then((value) {
+        log(value);
         final isRegistered = provider.isRegistered();
         isRegistered.then((value) {
           if (value) {
