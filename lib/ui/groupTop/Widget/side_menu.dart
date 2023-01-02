@@ -5,6 +5,7 @@ import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
 import 'package:groupmahjongrecord/ui/groupList/Widget/profile_edit_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
+import 'package:groupmahjongrecord/ui/groupTop/Widget/group_top_profile_edit_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -47,7 +48,13 @@ class GroupSideMenuState extends ConsumerState<GroupSideMenu> {
               ),
               accountEmail: null,
               currentAccountPicture: GestureDetector(
-                onTap: () => {ProfileEditDialog()},
+                onTap: () {
+                  sideMenuStatus.newProfileImage = null;
+                  showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          GroupTopProfileEditDialog());
+                },
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   backgroundImage: loginUser != null &&

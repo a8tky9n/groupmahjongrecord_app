@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/data/models/Game.dart';
 import 'package:groupmahjongrecord/data/models/Group.dart';
@@ -29,6 +29,7 @@ class GroupViewModel extends ChangeNotifier {
   List<Player>? players;
   // ユーザー情報
   LoginUser? loginUser;
+  File? newProfileImage;
   String detailId = '';
   int selectedIndex = 0;
   var playerDetailScores = <UserScore>[];
@@ -167,6 +168,7 @@ class GroupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 範囲の始まり設定
   void setStartDate(DateTime time) {
     log("範囲設定先頭");
     startDate = time;
@@ -174,6 +176,7 @@ class GroupViewModel extends ChangeNotifier {
     createDetailUserScore();
   }
 
+  // 範囲の終わり設定
   void setEndDate(DateTime time) {
     log("範囲設定末尾");
     endDate = time;
@@ -193,13 +196,14 @@ class GroupViewModel extends ChangeNotifier {
     createDetailUserScore();
   }
 
-  // // 詳細ユーザー設定
+  // 詳細ユーザー設定
   void setDetailUserId(String userId) {
     detailId = userId;
 
     notifyListeners();
   }
 
+  // タブ切り替え
   void changeTab(int tab) {
     selectedIndex = tab;
     detailId = '';
@@ -221,6 +225,7 @@ class GroupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ゲーム登録
   Future<void> registerGame() async {
     var uuid = Uuid();
     var gameId = uuid.v4();
@@ -266,8 +271,15 @@ class GroupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 黒川レートの設定
   void setAggregatedRate(int value) {
     aggregatedRate = value;
+    notifyListeners();
+  }
+
+  // プロフィール画像設定
+  void setNewProfileImage(File? value) {
+    newProfileImage = value;
     notifyListeners();
   }
 }

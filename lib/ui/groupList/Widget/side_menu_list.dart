@@ -40,7 +40,12 @@ class LoginSideMenuState extends ConsumerState<LoginSideMenu> {
               ),
               accountEmail: null,
               currentAccountPicture: GestureDetector(
-                onTap: () => {ProfileEditDialog()},
+                onTap: () {
+                  sideMenuStatus.newProfileImage = null;
+                  showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => ProfileEditDialog());
+                },
                 child: CircleAvatar(
                     backgroundColor: Colors.white,
                     backgroundImage: loginUser != null &&

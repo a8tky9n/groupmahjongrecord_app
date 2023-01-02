@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:convert';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
 import 'package:groupmahjongrecord/data/provider/server_repository_provider.dart';
@@ -27,6 +26,7 @@ class GroupListViewModel extends ChangeNotifier {
   String? password;
   String? description;
   File? groupImage;
+  File? newProfileImage;
   // ユーザー情報
   LoginUser? loginUser;
   bool isloading = false;
@@ -68,6 +68,12 @@ class GroupListViewModel extends ChangeNotifier {
   // グループ画像設定
   void setGroupImage(File? value) {
     groupImage = value;
+  }
+
+  // プロフィール画像設定
+  void setNewProfileImage(File? value) {
+    newProfileImage = value;
+    notifyListeners();
   }
 
   // グループ作成

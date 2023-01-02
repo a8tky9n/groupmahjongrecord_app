@@ -24,6 +24,7 @@ class GroupTopState extends ConsumerState<GroupTop> {
       final provider = ref.watch(groupViewModelProvider);
       final groupId = ref.watch(groupIdProvider);
       log(groupId);
+      provider.getLoginUser(() {});
       provider.getGroup(groupId);
       provider.detailId = "";
     });

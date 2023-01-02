@@ -15,74 +15,71 @@ class ProfileEditDialogState extends ConsumerState<ProfileEditDialog> {
   @override
   Widget build(BuildContext context) {
     final sideMenuStatus = ref.watch(groupListViewModelProvider);
-    return ElevatedButton(
-      child: const Text(''),
-      onPressed: () => showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('プロフィールを編集'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Column(
-                  children: <Widget>[
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: Colors.black,
-                        shape: const CircleBorder(
-                          side: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final ImagePicker _picker = ImagePicker();
-                        var image = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                        if (image != null) {
-                          // what you get if you cancel
-                          setState(() {
-                            _profileFile = image as File?;
-                          });
-                        }
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage: NetworkImage(
-                          sideMenuStatus.loginUser!.image!,
-                        ),
-                        radius: 40,
+    return AlertDialog(
+      title: const Text('プロフィールを編集'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: [
+            Column(
+              children: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    onPrimary: Colors.black,
+                    shape: const CircleBorder(
+                      side: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                        style: BorderStyle.solid,
                       ),
                     ),
-                    TextFormField(
-                      initialValue: sideMenuStatus.loginUser!.nickName,
-                      decoration: const InputDecoration(
-                        labelText: '名前',
-                      ),
-                    ),
-                    TextFormField(
-                      initialValue: "",
-                      decoration: const InputDecoration(
-                        labelText: '自己紹介',
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                )
+                  ),
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    var image =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      final imageTemp = File(image.path);
+                      sideMenuStatus.setNewProfileImage(imageTemp);
+                    }
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: sideMenuStatus.newProfileImage != null
+                        ? FileImage(sideMenuStatus.newProfileImage!)
+                        : sideMenuStatus.loginUser != null &&
+                                sideMenuStatus.loginUser!.image != null &&
+                                sideMenuStatus.loginUser!.image!.isNotEmpty
+                            ? NetworkImage(sideMenuStatus.loginUser!.image!)
+                                as ImageProvider<Object>
+                            : AssetImage('assets/no_image_square.jpeg'),
+                    radius: 40,
+                  ),
+                ),
+                TextFormField(
+                  initialValue: sideMenuStatus.loginUser!.nickName,
+                  decoration: const InputDecoration(
+                    labelText: '名前',
+                  ),
+                ),
+                TextFormField(
+                  initialValue: "",
+                  decoration: const InputDecoration(
+                    labelText: '自己紹介',
+                  ),
+                ),
+                SizedBox(height: 20),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('プロフィール更新'),
-            ),
+            )
           ],
         ),
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('プロフィール更新'),
+        ),
+      ],
     );
   }
 }
