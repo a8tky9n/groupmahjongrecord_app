@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/ui/groupList/Widget/group_card_list.dart';
 import 'package:groupmahjongrecord/ui/groupList/Widget/side_menu_list.dart';
 import 'package:groupmahjongrecord/ui/groupList/Widget/create_group_dialog.dart';
+import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:groupmahjongrecord/view/footer/Footer.dart';
 

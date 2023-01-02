@@ -123,93 +123,87 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
 
       return RadarDataSet(
         // Optional
-        fillColor: isSelected
-            ? rawDataSet.color.withOpacity(0.2)
-            : rawDataSet.color.withOpacity(0.05),
-        borderColor:
-            isSelected ? rawDataSet.color : rawDataSet.color.withOpacity(0.25),
-        entryRadius: isSelected ? 3 : 2,
+        fillColor: rawDataSet.color.withOpacity(0.2),
+        borderColor: rawDataSet.color,
+        // entryRadius: isSelected ? 3 : 2,
+        entryRadius: 5,
         dataEntries:
             rawDataSet.values.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: isSelected ? 2.3 : 2,
+        borderWidth: 2.3,
       );
     }).toList();
   }
 
   List<RawDataSet> rawDataSets() {
-    UserScore score = ref
+    UserScore? score = ref
         .watch(groupViewModelProvider)
         .playerDetailScores
-        .firstWhere((s) => s.id == ref.watch(groupViewModelProvider).detailId);
+        .firstWhereOrNull(
+            (s) => s.id == ref.watch(groupViewModelProvider).detailId);
     return [
-      RawDataSet(
-        title: 'Fashion',
-        color: fashionColor,
-        values: [
-          // 平均スコア
-          score.averageScore! >= 10
-              ? 4
-              : score.averageScore! > 0
-                  ? 3
-                  : score.averageScore! > -10
-                      ? 2
-                      : 1,
-          // 平均着順
-          score.averageRank! <= 2.3
-              ? 4
-              : score.averageRank! < 2.5
-                  ? 3
-                  : score.averageRank! < 2.7
-                      ? 2
-                      : 1,
-          //　トップ率
-          score.topAverage! >= 30
-              ? 4
-              : score.topAverage! > 25
-                  ? 3
-                  : score.topAverage! > 20
-                      ? 2
-                      : 1,
-          // ラス回避率
-          score.avoidButtomAverage! >= 80
-              ? 4
-              : score.avoidButtomAverage! > 75
-                  ? 3
-                  : score.avoidButtomAverage! > 70
-                      ? 2
-                      : 1,
-          // 連対率
-          score.plusAverage! >= 60
-              ? 4
-              : score.plusAverage! > 55
-                  ? 3
-                  : score.plusAverage! > 50
-                      ? 2
-                      : 1,
-        ],
-      ),
+      score != null
+          ? RawDataSet(
+              title: 'Score',
+              color: fashionColor,
+              values: [
+                // 平均スコア
+                score.averageScore! >= 10
+                    ? 4
+                    : score.averageScore! > 0
+                        ? 3
+                        : score.averageScore! > -10
+                            ? 2
+                            : 1,
+                // 平均着順
+                score.averageRank! <= 2.3
+                    ? 4
+                    : score.averageRank! < 2.5
+                        ? 3
+                        : score.averageRank! < 2.7
+                            ? 2
+                            : 1,
+                //　トップ率
+                score.topAverage! >= 30
+                    ? 4
+                    : score.topAverage! > 25
+                        ? 3
+                        : score.topAverage! > 20
+                            ? 2
+                            : 1,
+                // ラス回避率
+                score.avoidButtomAverage! >= 80
+                    ? 4
+                    : score.avoidButtomAverage! > 75
+                        ? 3
+                        : score.avoidButtomAverage! > 70
+                            ? 2
+                            : 1,
+                // 連対率
+                score.plusAverage! >= 60
+                    ? 4
+                    : score.plusAverage! > 55
+                        ? 3
+                        : score.plusAverage! > 50
+                            ? 2
+                            : 1,
+              ],
+            )
+          : RawDataSet(
+              title: 'Score',
+              color: fashionColor,
+              values: [1, 1, 1, 1, 1],
+            ),
     ];
   }
 
+  // レーダーチャート
+  // 現状最大値の設定ができないため全て同じ値だと最大で表示される
   Widget _rederChart() {
     return SizedBox(
       width: 300,
       height: 300,
       child: RadarChart(
         RadarChartData(
-          radarTouchData:
-              RadarTouchData(touchCallback: (FlTouchEvent event, response) {
-            if (!event.isInterestedForInteractions) {
-              setState(() {
-                selectedDataSetIndex = -1;
-              });
-              return;
-            }
-            setState(() {
-              selectedDataSetIndex =
-                  response?.touchedSpot?.touchedDataSetIndex ?? -1;
-            });
-          }),
           dataSets: showingDataSets(),
           radarBackgroundColor: Colors.transparent,
           borderData: FlBorderData(show: false),
@@ -274,9 +268,10 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
       }
     }
     return SizedBox(
-        width: 300,
-        height: 150,
-        child: LineChart(LineChartData(
+      width: 300,
+      height: 150,
+      child: LineChart(
+        LineChartData(
           backgroundColor: Colors.grey[200],
           minY: 1,
           maxY: 4,
@@ -297,7 +292,12 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
-        )));
+          lineTouchData: LineTouchData(
+            enabled: false,
+          ),
+        ),
+      ),
+    );
   }
 
   // タイトル
@@ -330,7 +330,7 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
 
   Widget _info() {
     var detailScore =
-        ref.watch(groupViewModelProvider).playerDetailScores.firstWhere(
+        ref.watch(groupViewModelProvider).playerDetailScores.firstWhereOrNull(
               (s) => s.id == ref.watch(groupViewModelProvider).detailId,
             );
     return Column(
@@ -352,28 +352,45 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-                width: 80,
-                child: Center(
-                  child: Text(
-                    detailScore.totalGameCount!.toString(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-            SizedBox(
-                width: 80,
-                child: Center(
-                  child: Text(
-                    detailScore.totalScore!.toString(),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
+              width: 80,
+              child: Center(
+                child: detailScore != null
+                    ? Text(
+                        detailScore.totalGameCount!.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+              ),
+            ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(
-                  detailScore.averageScore!.toStringAsFixed(2),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: detailScore != null
+                    ? Text(
+                        detailScore.totalScore!.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+              ),
+            ),
+            SizedBox(
+              width: 80,
+              child: Center(
+                child: detailScore != null
+                    ? Text(
+                        detailScore.averageScore!.toStringAsFixed(2),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
           ],
@@ -396,46 +413,71 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
           SizedBox(
             width: 80,
             child: Center(
-              child: Text(
-                detailScore.averageRank!.toStringAsFixed(2),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: detailScore != null
+                  ? Text(
+                      detailScore.averageRank!.toStringAsFixed(2),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      "-",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
           SizedBox(
             width: 30,
             child: Center(
-              child: Text(
-                detailScore.first!.toString(),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: detailScore != null
+                  ? Text(
+                      detailScore.first!.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      "-",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
           SizedBox(
             width: 30,
             child: Center(
-              child: Text(
-                detailScore.second!.toString(),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: detailScore != null
+                  ? Text(
+                      detailScore.second!.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      "-",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
           SizedBox(
             width: 30,
             child: Center(
-              child: Text(
-                detailScore.third!.toString(),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: detailScore != null
+                  ? Text(
+                      detailScore.third!.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      "-",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
           SizedBox(
             width: 30,
             child: Center(
-              child: Text(
-                detailScore.forth!.toString(),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: detailScore != null
+                  ? Text(
+                      detailScore.forth!.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      "-",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
             ),
           )
         ]),
@@ -475,28 +517,44 @@ class MemberDetailState extends ConsumerState<MemberDetail> {
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(
-                  detailScore.topAverage!.toStringAsFixed(2) + '%',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: detailScore != null
+                    ? Text(
+                        detailScore.topAverage!.toStringAsFixed(2) + '%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(
-                  detailScore.avoidButtomAverage!.toStringAsFixed(2) + '%',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: detailScore != null
+                    ? Text(
+                        detailScore.avoidButtomAverage!.toStringAsFixed(2) +
+                            '%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
             SizedBox(
               width: 80,
               child: Center(
-                child: Text(
-                  detailScore.plusAverage!.toStringAsFixed(2) + '%',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: detailScore != null
+                    ? Text(
+                        detailScore.plusAverage!.toStringAsFixed(2) + '%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        "-",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
           ],

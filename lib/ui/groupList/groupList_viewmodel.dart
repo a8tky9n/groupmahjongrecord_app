@@ -78,7 +78,8 @@ class GroupListViewModel extends ChangeNotifier {
       'text': description,
       'image': "",
     };
-    _repository.createGroup(json);
+    await _repository.createGroup(json);
+    await getLoginUser(() {});
     notifyListeners();
   }
 }

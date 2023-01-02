@@ -28,18 +28,24 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
     final sideMenuStatus = ref.watch(groupListViewModelProvider);
     log("ログイン情報 : " + sideMenuStatus.loginUser.toString());
 
-    return GridView.count(
-      // primary: false,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      // return Column(
-      children: <Widget>[
-        if (sideMenuStatus.loginUser != null &&
-            sideMenuStatus.loginUser!.group!.isNotEmpty)
-          for (var group in sideMenuStatus.loginUser!.group!)
-            buildImageCard(group.image!, group.title!, group.id!, ref),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        print('Loading New Data');
+        // await _loadData();
+      },
+      child: GridView.count(
+        // primary: false,
+        shrinkWrap: true,
+        physics: AlwaysScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        // return Column(
+        children: <Widget>[
+          if (sideMenuStatus.loginUser != null &&
+              sideMenuStatus.loginUser!.group!.isNotEmpty)
+            for (var group in sideMenuStatus.loginUser!.group!)
+              buildImageCard(group.image!, group.title!, group.id!, ref),
+        ],
+      ),
     );
   }
 
