@@ -64,14 +64,14 @@ class MemberList extends ConsumerWidget {
                     player.user.image,
                     player.user.nickName,
                     player.user.id!,
-                    1500,
+                    player.user.rate4!,
                   )
                 : buildRageCardWidhBadge(
                     ref,
                     player.user.image,
                     player.user.nickName,
                     player.user.id!,
-                    1500,
+                    player.user.rate4!,
                     player.position),
       ],
     );

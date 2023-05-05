@@ -22,11 +22,18 @@ class GroupListViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
   final ServerRepository _repository;
 
+  File? groupImage;
   String? groupName;
   String? password;
   String? description;
-  File? groupImage;
+
+  String? joinGroupID;
+  String? joinPassword;
+
   File? newProfileImage;
+  String? newUserName;
+  String? newIntorduction;
+
   // ユーザー情報
   LoginUser? loginUser;
   bool isloading = false;
@@ -76,16 +83,60 @@ class GroupListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // プロフィール画像設定
+  void setNewUserName(String value) {
+    newUserName = value;
+    notifyListeners();
+  }
+
+  // プロフィール画像設定
+  void setNewIntro(String value) {
+    newIntorduction = value;
+    notifyListeners();
+  }
+
+  void setJoinGroupId(String value) {
+    joinGroupID = value;
+    notifyListeners();
+  }
+
+  void setJoinPassword(String value) {
+    joinPassword = value;
+    notifyListeners();
+  }
+
   // グループ作成
   Future<void> createGroup() async {
     var json = {
       'title': groupName,
       'password': password,
       'text': description,
-      'image': "",
     };
-    await _repository.createGroup(json);
+    await _repository.createGroup(json, groupImage);
     await getLoginUser(() {});
+    notifyListeners();
+  }
+
+  Future<void> joinGroup(Function(String) onFailed) async {
+    final json = {
+      "group_id": joinGroupID,
+      "password": joinPassword,
+    };
+    var errorMsg = await _repository.joinGroup(json);
+    log("エラーメッセージ " + errorMsg);
+    if (errorMsg == "") {
+      await getLoginUser(() {});
+    } else {
+      onFailed(errorMsg);
+      log("グループ参加に失敗");
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateUserInfo(VoidCallback onFailed) async {
+    var isSuccess = await _repository.updateMe(
+        newUserName ?? "", newIntorduction ?? "", newProfileImage);
+    log(isSuccess.toString());
     notifyListeners();
   }
 }

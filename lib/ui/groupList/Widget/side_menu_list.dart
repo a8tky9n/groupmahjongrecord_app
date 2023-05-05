@@ -30,7 +30,7 @@ class LoginSideMenuState extends ConsumerState<LoginSideMenu> {
             UserAccountsDrawerHeader(
               accountName: Text(
                 loginUser == null ||
-                        loginUser!.nickName == null ||
+                        loginUser.nickName == null ||
                         loginUser.nickName!.isEmpty
                     ? 'ぷれいやー'
                     : loginUser.nickName!,

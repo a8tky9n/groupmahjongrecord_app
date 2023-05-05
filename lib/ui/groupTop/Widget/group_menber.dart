@@ -22,7 +22,7 @@ class GroupMember extends ConsumerWidget {
               player.user.image,
               player.user.nickName,
               player.user.id!,
-              1500,
+              player.user.rate4!,
             ),
       ],
     );
@@ -37,16 +37,8 @@ class GroupMember extends ConsumerWidget {
         imgPath: imageUrl,
         userName: title,
         userRate: rate,
-        OnTapCallback: () => {
-          ref.read(groupViewModelProvider.notifier).setDetailUserId(id)
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => UserScore(
-          //       user: _user.where((user) => user.userId == id).first,
-          //     ),
-          //   ),
-          // ),
-        },
+        OnTapCallback: () =>
+            {ref.read(groupViewModelProvider.notifier).setDetailUserId(id)},
       ),
     );
   }

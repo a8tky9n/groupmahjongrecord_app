@@ -29,7 +29,7 @@ class Legalnotice extends ConsumerWidget {
               child: Column(
                 children: const <Widget>[
                   Text(
-                    '・本サイトにおける内容の変更、中断、終了によって生じたいかなる損害についても一切責任を負いません。',
+                    '・本アプリにおける内容の変更、中断、終了によって生じたいかなる損害についても一切責任を負いません。',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.black, fontSize: 18.0),
                   ),

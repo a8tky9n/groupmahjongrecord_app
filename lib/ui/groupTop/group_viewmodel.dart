@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/data/models/Game.dart';
 import 'package:groupmahjongrecord/data/models/Group.dart';
 import 'package:groupmahjongrecord/data/models/LoginUser.dart';
+import 'package:groupmahjongrecord/data/models/Schedule.dart';
 import 'package:groupmahjongrecord/data/models/UserScore.dart';
 import 'package:groupmahjongrecord/data/provider/server_repository_provider.dart';
 import 'package:groupmahjongrecord/data/repository/server_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:groupmahjongrecord/data/repository/auth_repository.dart';
 import 'package:groupmahjongrecord/data/provider/auth_repository_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 final groupViewModelProvider =
@@ -24,25 +26,49 @@ class GroupViewModel extends ChangeNotifier {
 
   final AuthRepository _authRepository;
   final ServerRepository _repository;
+
+  // グループ詳細
   GroupDetail? groupDetail;
+  // ゲーム一覧
   List<Game>? games;
+  // グループに参加しているユーザー一覧
   List<Player>? players;
-  // ユーザー情報
+  // ログインしているユーザー情報
   LoginUser? loginUser;
+
+  //スケジュール取得
+  List<Schedule>? schedules;
+
+  // アカウント更新時の画像
   File? newProfileImage;
+  // ユーザー詳細ID
   String detailId = '';
+
+  // 更新するゲーム
+  Game? updateGame;
+  // 画面のタブ(グループTop、メンバーなどのあれ)
   int selectedIndex = 0;
+  // ユーザースコアの一覧
   var playerDetailScores = <UserScore>[];
 
+  // 範囲指定の開始日時
   DateTime? startDate;
+  // 範囲指定の終了日時
   DateTime? endDate;
+  // 記録日時
   DateTime? recordDateTime;
 
+  // 対局開始前の席順の配列
   var positions = [1, 2, 3, 4];
+  // 成績の配列
   List<double> scores = [0, 0, 0, 0];
+  // 記録した成績が有効かどうか(合算して0になればOK)
   bool scoreIsValid = false;
+  // 1点おいくら万円かのレート
   int aggregatedRate = 50;
+  // ウマ
   int horseRate = 5;
+
   // ユーザー情報取得
   Future<void> getLoginUser(VoidCallback onFailed) async {
     loginUser = await _repository.getMe();
@@ -56,6 +82,7 @@ class GroupViewModel extends ChangeNotifier {
   Future<void> getGroup(String groupId) async {
     var res = await _repository.getGroup(groupId);
     if (res != null) {
+      print("グループ情報取得　" + res.toString());
       groupDetail = GroupDetail.fromJson(res[0] as Map<String, dynamic>);
       players = <Player>[];
       for (var v in groupDetail!.profiles!) {
@@ -96,6 +123,7 @@ class GroupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 対局結果の一覧からユーザーの成績を作成する。
   void createDetailUserScore() {
     playerDetailScores.clear();
     log("ユーザーの成績作成");
@@ -191,6 +219,7 @@ class GroupViewModel extends ChangeNotifier {
     createDetailUserScore();
   }
 
+  // 対局日の設定
   void setRecordDateTime(DateTime time) {
     recordDateTime = time;
     createDetailUserScore();
@@ -199,8 +228,12 @@ class GroupViewModel extends ChangeNotifier {
   // 詳細ユーザー設定
   void setDetailUserId(String userId) {
     detailId = userId;
-
     notifyListeners();
+  }
+
+  // ゲームの更新
+  void setUpdateGame(Game newUpdateGame) {
+    updateGame = newUpdateGame;
   }
 
   // タブ切り替え
@@ -217,6 +250,22 @@ class GroupViewModel extends ChangeNotifier {
     for (double score in scores) {
       sum += score;
     }
+    print("合計値：" + sum.toString());
+    if (sum != 0) {
+      scoreIsValid = true;
+    } else {
+      scoreIsValid = false;
+    }
+    notifyListeners();
+  }
+
+  // 成績を設定する
+  void setEditScore(int position, double value) {
+    updateGame!.gameResults![position].score = value;
+    double sum = 0;
+    for (double score in scores) {
+      sum += score;
+    }
     if (sum != 0) {
       scoreIsValid = true;
     } else {
@@ -229,33 +278,52 @@ class GroupViewModel extends ChangeNotifier {
   Future<void> registerGame() async {
     var uuid = Uuid();
     var gameId = uuid.v4();
+
+    List sortScores = scores;
+    sortScores.sort(((a, b) => b.compareTo(a)));
     var json = {
       'is_sanma': false,
       'group_id': groupDetail!.id,
       'game_results': [
         {
           "rank": 1,
-          "score": scores[0] + horseRate * 2,
+          "score": sortScores[0] + horseRate * 2,
           "game": gameId,
-          "profile": players!.firstWhere((p) => p.position == 1).user.id
+          "profile": players!
+              .firstWhere(
+                  (p) => p.position == scores.indexOf(sortScores[0]) + 1)
+              .user
+              .id
         },
         {
           "rank": 2,
-          "score": scores[1] + horseRate,
+          "score": sortScores[1] + horseRate,
           "game": gameId,
-          "profile": players!.firstWhere((p) => p.position == 2).user.id
+          "profile": players!
+              .firstWhere(
+                  (p) => p.position == scores.indexOf(sortScores[1]) + 1)
+              .user
+              .id
         },
         {
           "rank": 3,
-          "score": scores[2] - horseRate,
+          "score": sortScores[2] - horseRate,
           "game": gameId,
-          "profile": players!.firstWhere((p) => p.position == 3).user.id
+          "profile": players!
+              .firstWhere(
+                  (p) => p.position == scores.indexOf(sortScores[2]) + 1)
+              .user
+              .id
         },
         {
           "rank": 4,
-          "score": scores[3] - horseRate * 2,
+          "score": sortScores[3] - horseRate * 2,
           "game": gameId,
-          "profile": players!.firstWhere((p) => p.position == 4).user.id
+          "profile": players!
+              .firstWhere(
+                  (p) => p.position == scores.indexOf(sortScores[3]) + 1)
+              .user
+              .id
         }
       ],
     };
@@ -271,6 +339,53 @@ class GroupViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ゲーム修正
+  Future<void> editGame() async {
+    var json = {
+      'is_sanma': updateGame!.isSanma,
+      'id': updateGame!.id,
+      'group_id': groupDetail!.id,
+      'game_results': [
+        {
+          "rank": 1,
+          "score": updateGame!.gameResults![0].score,
+          "game": updateGame!.id,
+          "profile": updateGame!.gameResults![0].profile
+        },
+        {
+          "rank": 2,
+          "score": updateGame!.gameResults![1].score,
+          "game": updateGame!.id,
+          "profile": updateGame!.gameResults![1].profile
+        },
+        {
+          "rank": 3,
+          "score": updateGame!.gameResults![2].score,
+          "game": updateGame!.id,
+          "profile": updateGame!.gameResults![2].profile
+        },
+        {
+          "rank": 4,
+          "score": updateGame!.gameResults![3].score,
+          "game": updateGame!.id,
+          "profile": updateGame!.gameResults![3].profile
+        }
+      ],
+    };
+    log("記録Post : " + json.toString());
+    await _repository.updateGame(json);
+    log("記録Post完了");
+    updateGame = null;
+    getGroup(groupDetail!.id!);
+    notifyListeners();
+  }
+
+// 黒川レートの設定
+  void setHorseRate(int value) {
+    horseRate = value;
+    notifyListeners();
+  }
+
   // 黒川レートの設定
   void setAggregatedRate(int value) {
     aggregatedRate = value;
@@ -281,6 +396,21 @@ class GroupViewModel extends ChangeNotifier {
   void setNewProfileImage(File? value) {
     newProfileImage = value;
     notifyListeners();
+  }
+
+  // グループの共有
+  // インテントが立ち上がる
+  Future ShareGroup(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.share(
+        '以下のIDとパスワードを入力することでグループに参加できます。\n' +
+            "ID : " +
+            groupDetail!.id! +
+            "\n" +
+            "パスワード : " +
+            groupDetail!.password!,
+        subject: "グループを共有",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 }
 

@@ -6,14 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList.dart';
 import 'package:groupmahjongrecord/ui/groupTop/groupTop.dart';
 import 'package:groupmahjongrecord/ui/login/Login.dart';
-import 'package:groupmahjongrecord/view/Contact.dart';
+import 'package:groupmahjongrecord/view/PrivacyPolicy.dart';
 import 'package:groupmahjongrecord/view/Legalnotice.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 enum AppScene {
   top,
   notice,
-  contact,
+  privacy,
   groupList,
   groupTop,
 }
@@ -45,10 +45,10 @@ class SceneRouterDelegate extends RouterDelegate<void>
             arguments: AppScene.top,
             child: LoginPage(),
           ),
-        if (sceneTitle == AppScene.contact.name)
+        if (sceneTitle == AppScene.privacy.name)
           MaterialPage(
-            arguments: AppScene.contact,
-            child: Contact(),
+            arguments: AppScene.privacy,
+            child: PrivacyPolicy(),
           ),
         if (sceneTitle == AppScene.notice.name)
           const MaterialPage(

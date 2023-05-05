@@ -3,6 +3,7 @@ import 'package:groupmahjongrecord/components/ScoreHeader.dart';
 import 'package:groupmahjongrecord/components/ScoreRow.dart';
 import 'package:groupmahjongrecord/data/models/UserScore.dart';
 import 'package:groupmahjongrecord/ui/groupTop/Widget/aggregated_data_dialog.dart';
+import 'package:groupmahjongrecord/ui/groupTop/Widget/edit_game_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -306,10 +307,11 @@ class GroupScore extends ConsumerWidget {
     );
   }
 
-  Widget _playRecords(WidgetRef ref) {
-    var games = ref.watch(groupViewModelProvider).games!;
-    var sDate = ref.watch(groupViewModelProvider).startDate;
-    var eDate = ref.watch(groupViewModelProvider).endDate;
+  Widget _playRecords(BuildContext context, WidgetRef ref) {
+    var provider = ref.watch(groupViewModelProvider);
+    var games = provider.games!;
+    var sDate = provider.startDate;
+    var eDate = provider.endDate;
     var fillterdGames;
     if (sDate != null && eDate != null) {
       fillterdGames = games
@@ -335,7 +337,12 @@ class GroupScore extends ConsumerWidget {
                 // for (var score in game.gameResults!)
                 ScoreRow(
                   scores: fillterdGames[i].gameResults!,
-                  OnTapCallback: () => {},
+                  OnTapCallback: () {
+                    provider.setUpdateGame(fillterdGames[i]);
+                    showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => EditGameDialog());
+                  },
                 ),
             ],
           ),
@@ -383,7 +390,7 @@ class GroupScore extends ConsumerWidget {
         const SizedBox(
           height: 20,
         ),
-        _playRecords(ref),
+        _playRecords(context, ref),
       ],
     );
   }

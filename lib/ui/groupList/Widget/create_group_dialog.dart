@@ -14,6 +14,7 @@ class CreateGroupDialogState extends ConsumerState<CreateGroupDialog> {
     super.initState();
   }
 
+  final ImagePicker _picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(groupListViewModelProvider);
@@ -48,16 +49,12 @@ class CreateGroupDialogState extends ConsumerState<CreateGroupDialog> {
                 const SizedBox(height: 20),
                 OutlinedButton(
                     onPressed: () async {
-                      final ImagePicker _picker = ImagePicker();
                       var image =
                           await _picker.pickImage(source: ImageSource.gallery);
+
                       if (image != null) {
-                        // what you get if you cancel
-                        setState(() {
-                          if (image != null) {
-                            provider.setGroupImage(image as File?);
-                          }
-                        });
+                        var imageTemp = File(image.path);
+                        provider.setGroupImage(imageTemp);
                       }
                     },
                     child: const Text('画像を選択'))

@@ -21,7 +21,7 @@ class GroupTopMainState extends ConsumerState<GroupTopMain> {
   // サーバーから成績を取ってくる
 
   // グループのトップ画
-  Widget _topImage() {
+  Widget _topImage(BuildContext context) {
     final provider = ref.watch(groupViewModelProvider);
     var group = provider.groupDetail;
     return Column(
@@ -61,77 +61,6 @@ class GroupTopMainState extends ConsumerState<GroupTopMain> {
         ),
         SizedBox(
           width: 300,
-          // 内側の余白（パディング）
-          // padding: EdgeInsets.all(8),
-          // 外側の余白（マージン）
-          // margin: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.black,
-                  shape: const CircleBorder(
-                    side: BorderSide(
-                      color: Colors.transparent,
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                onPressed: () {},
-                child: Image.asset(
-                  'assets/icon/f_logo_RGB-Blue_1024.png',
-                  width: 45,
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.black,
-                  shape: const CircleBorder(
-                    side: BorderSide(
-                      color: Colors.transparent,
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                onPressed: () {},
-                child: Image.asset(
-                  'assets/icon/Twitter social icons - rounded square - blue.png',
-                  width: 45,
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.black,
-                  shape: const CircleBorder(
-                    side: BorderSide(
-                      color: Colors.transparent,
-                      width: 1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-                onPressed: () {},
-                child: Image.asset(
-                  'assets/icon/LINE_APP_iOS.png',
-                  width: 45,
-                ),
-              ),
-              Ink(
-                child: IconButton(
-                  icon: const Icon(Icons.mail_rounded),
-                  iconSize: 45,
-                  splashRadius: 30,
-                  onPressed: () {},
-                ),
-              )
-            ],
-          ),
         ),
         const SizedBox(
           height: 20,
@@ -186,11 +115,11 @@ class GroupTopMainState extends ConsumerState<GroupTopMain> {
     );
   }
 
-  Widget _main() {
+  Widget _main(BuildContext context) {
     //グループトップ
     return Column(
       children: <Widget>[
-        _topImage(),
+        _topImage(context),
         _recentScore(),
       ],
     );
@@ -210,6 +139,6 @@ class GroupTopMainState extends ConsumerState<GroupTopMain> {
               child: CircularProgressIndicator(),
             )
           ])
-        : _main();
+        : _main(context);
   }
 }

@@ -74,6 +74,7 @@ class LoginMenuState extends ConsumerState<LoginMenu> {
                     SizedBox(
                       width: 330.0,
                       child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         onChanged: (val) {
                           provider.setEmail(val);
                         },

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
@@ -10,7 +11,7 @@ class ProfileEditDialog extends StatefulHookConsumerWidget {
 }
 
 class ProfileEditDialogState extends ConsumerState<ProfileEditDialog> {
-  File? _profileFile;
+  final ImagePicker _picker = ImagePicker();
   // プロフィール変更ダイアログ
   @override
   Widget build(BuildContext context) {
@@ -35,11 +36,11 @@ class ProfileEditDialogState extends ConsumerState<ProfileEditDialog> {
                     ),
                   ),
                   onPressed: () async {
-                    final ImagePicker _picker = ImagePicker();
                     var image =
                         await _picker.pickImage(source: ImageSource.gallery);
+                    log("画像選択");
                     if (image != null) {
-                      final imageTemp = File(image.path);
+                      var imageTemp = File(image.path);
                       sideMenuStatus.setNewProfileImage(imageTemp);
                     }
                   },
@@ -61,12 +62,14 @@ class ProfileEditDialogState extends ConsumerState<ProfileEditDialog> {
                   decoration: const InputDecoration(
                     labelText: '名前',
                   ),
+                  onChanged: sideMenuStatus.setNewUserName,
                 ),
                 TextFormField(
                   initialValue: "",
                   decoration: const InputDecoration(
                     labelText: '自己紹介',
                   ),
+                  onChanged: sideMenuStatus.setNewIntro,
                 ),
                 SizedBox(height: 20),
               ],
@@ -76,7 +79,10 @@ class ProfileEditDialogState extends ConsumerState<ProfileEditDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            sideMenuStatus.updateUserInfo(() {});
+            Navigator.pop(context);
+          },
           child: const Text('プロフィール更新'),
         ),
       ],

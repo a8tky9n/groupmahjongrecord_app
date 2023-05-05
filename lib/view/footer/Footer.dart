@@ -23,10 +23,10 @@ class Footer extends ConsumerWidget {
                 : AppScene.values.byName(provider);
             ref
                 .read(sceneTitleProvider.notifier)
-                .update((state) => AppScene.contact.name);
+                .update((state) => AppScene.privacy.name);
             // Navigator.pushNamed(context, '/contact');
           },
-          child: const Text('お問い合わせ'),
+          child: const Text('プライバシーポリシー'),
         ),
         TextButton(
           style: TextButton.styleFrom(

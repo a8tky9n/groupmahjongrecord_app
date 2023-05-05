@@ -22,7 +22,6 @@ class GroupList extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[
-            // crossAxisAlignment: CrossAxisAlignment.start,
             GroupCardList(),
             const Footer(),
             const SizedBox(

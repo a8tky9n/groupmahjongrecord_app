@@ -51,7 +51,7 @@ class ForgetPasswordMenuStatus extends ConsumerState<ForgetPasswordMenu> {
                     SizedBox(
                       width: 330.0,
                       child: TextFormField(
-                        // controller: provider.email,
+                        keyboardType: TextInputType.emailAddress,
                         enabled: true,
                         style: const TextStyle(color: Colors.black),
                         obscureText: false,

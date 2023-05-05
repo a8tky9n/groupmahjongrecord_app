@@ -52,7 +52,7 @@ class CreateAccountMenuState extends ConsumerState<CreateAccountMenu> {
                     SizedBox(
                       width: 330.0,
                       child: TextFormField(
-                        // controller: provider.email,
+                        keyboardType: TextInputType.emailAddress,
                         onChanged: provider.setEmail,
                         enabled: true,
                         style: const TextStyle(color: Colors.black),
@@ -65,7 +65,6 @@ class CreateAccountMenuState extends ConsumerState<CreateAccountMenu> {
                             height: 0.5,
                           ),
                         ),
-
                         validator: (val) {
                           if (val == null || val.isEmpty) {
                             return 'メールアドレスを入力してください。';

@@ -63,6 +63,7 @@ class contactMainPage extends ConsumerState<Contact> {
                 Container(
                   width: 330.0,
                   child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     enabled: true,
                     style: TextStyle(color: Colors.black),
                     obscureText: false,

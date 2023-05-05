@@ -1,24 +1,27 @@
+import 'package:flutter/services.dart';
 import 'package:groupmahjongrecord/ui/groupTop/group_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class CreateGameDialog extends StatefulHookConsumerWidget {
+class EditGameDialog extends StatefulHookConsumerWidget {
   @override
-  CreateGameDialogState createState() => CreateGameDialogState();
+  EditGameDialogState createState() => EditGameDialogState();
 }
 
-class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
+class EditGameDialogState extends ConsumerState<EditGameDialog> {
   void initState() {
     super.initState();
   }
 
-  List<String> posText = ["東", "南", "西", "北"];
+  List<String> posText = ["1着", "2着", "3着", "4着"];
   Widget _player(int pos) {
     var provider = ref.watch(groupViewModelProvider);
-    var players = provider.players!;
-    var player = players.firstWhere((p) => p.position == pos);
+    var game = provider.updateGame!;
+    var results = game.gameResults;
+    var player = provider.players!
+        .firstWhere((p) => p.user.id == results![pos - 1].profile);
+    // var player = players.firstWhere((p) => p.position == pos);
     return Row(
       children: [
         SizedBox(
@@ -55,8 +58,9 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
         ),
         SizedBox(
           height: 50,
-          width: 90,
+          width: 80,
           child: TextFormField(
+            initialValue: results![pos - 1].score.toString(),
             decoration: const InputDecoration(
               hintText: '0.0',
               hintStyle: const TextStyle(fontSize: 12),
@@ -66,16 +70,10 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp('-?[0-9]*[\.]?[0-9]?'))
             ],
-            onChanged: ((value) {
-              print("入力値：" + value);
-              if (value != "-" && value.length != 0) {
-                if (value != "-") {
-                  provider.setScore(pos - 1, double.parse(value));
-                } else {
-                  provider.setScore(pos - 1, 0);
-                }
-              }
-            }),
+            onChanged: ((value) => {
+                  if (value != "-")
+                    provider.setScore(pos - 1, double.parse(value))
+                }),
           ),
         ),
       ],
@@ -85,6 +83,7 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(groupViewModelProvider);
+    final game = provider.updateGame!;
     return AlertDialog(
       title: const Text('対局記録'),
       content: SingleChildScrollView(
@@ -97,7 +96,7 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
                   child: DateTimePicker(
                     type: DateTimePickerType.dateTimeSeparate,
                     dateMask: 'yyyy/MM/d',
-                    initialValue: DateTime.now().toString(),
+                    initialValue: game.createdAt.toString(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     locale: const Locale('ja', 'JP'),
@@ -121,57 +120,6 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
                   ),
                 ),
                 for (int i = 0; i < 4; i++) _player(i + 1),
-                // ウマ
-                SizedBox(height: 10),
-                SizedBox(
-                  width: 300,
-                  child: Text(
-                    "ウマ",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "0",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Radio(
-                      activeColor: Colors.blue,
-                      value: 0,
-                      groupValue: provider.horseRate,
-                      onChanged: (value) => provider.setHorseRate(value as int),
-                      autofocus: true,
-                    ),
-                    const SizedBox(
-                      width: 1,
-                    ),
-                    const Text(
-                      "5-10",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Radio(
-                      activeColor: Colors.blue,
-                      value: 5,
-                      groupValue: provider.horseRate,
-                      onChanged: (value) => provider.setHorseRate(value as int),
-                    ),
-                    const SizedBox(
-                      width: 1,
-                    ),
-                    const Text(
-                      "10-20",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Radio(
-                      activeColor: Colors.blue,
-                      value: 10,
-                      groupValue: provider.horseRate,
-                      onChanged: (value) => provider.setHorseRate(value as int),
-                    ),
-                  ],
-                ),
               ],
             )
           ],
@@ -189,10 +137,10 @@ class CreateGameDialogState extends ConsumerState<CreateGameDialog> {
               ? null
               : () {
                   // グループ作成
-                  provider.registerGame();
+                  provider.editGame();
                   Navigator.pop(context);
                 },
-          child: const Text('作成'),
+          child: const Text('保存'),
         ),
       ],
     );

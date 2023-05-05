@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:groupmahjongrecord/main_viewmodel.dart';
 import 'package:groupmahjongrecord/roter_delegate.dart';
+import 'package:groupmahjongrecord/ui/groupList/Widget/join_group_dialog.dart';
 import 'package:groupmahjongrecord/ui/groupList/groupList_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -26,32 +27,88 @@ class GroupCardListState extends ConsumerState<GroupCardList> {
   @override
   Widget build(BuildContext context) {
     final sideMenuStatus = ref.watch(groupListViewModelProvider);
-    log("ログイン情報 : " + sideMenuStatus.loginUser.toString());
+    // log("ログイン情報 : " + sideMenuStatus.loginUser.toString());
 
     return RefreshIndicator(
       onRefresh: () async {
         print('Loading New Data');
+        sideMenuStatus.getLoginUser(() {});
         // await _loadData();
       },
-      child: GridView.count(
-        // primary: false,
-        shrinkWrap: true,
-        physics: AlwaysScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        // return Column(
-        children: <Widget>[
-          if (sideMenuStatus.loginUser != null &&
-              sideMenuStatus.loginUser!.group!.isNotEmpty)
-            for (var group in sideMenuStatus.loginUser!.group!)
-              buildImageCard(group.image!, group.title!, group.id!, ref),
-        ],
-      ),
+      child: sideMenuStatus.loginUser == null
+          ? Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                  Container(
+                    height: 50,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(),
+                  )
+                ])
+          : GridView.count(
+              // primary: false,
+              shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              // return Column(
+
+              children: <Widget>[
+                for (var group in sideMenuStatus.loginUser!.group!)
+                  buildImageCard(
+                      group.image ?? "", group.title!, group.id!, ref),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 5,
+                  margin: EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => JoinGroupDialog());
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.black54,
+                            size: 48.0,
+                            semanticLabel:
+                                'Text to announce in accessibility modes',
+                          ),
+                        ),
+                        // const SizedBox(height: 10),
+                        Text(
+                          'グループに参加',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 
   Widget buildImageCard(
       String imageUrl, String title, String id, WidgetRef ref) {
-    log("タイトル名" + title);
+    // log("タイトル名" + title);
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(

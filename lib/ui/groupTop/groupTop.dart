@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:groupmahjongrecord/main_viewmodel.dart';
+import 'package:groupmahjongrecord/ui/groupTop/Widget/group_schedule.dart';
 import 'package:groupmahjongrecord/ui/groupTop/Widget/group_score.dart';
 import 'package:groupmahjongrecord/ui/groupTop/Widget/side_menu.dart';
 import 'package:groupmahjongrecord/ui/groupTop/Widget/group_top_main.dart';
@@ -46,8 +47,12 @@ class GroupTopState extends ConsumerState<GroupTop> {
           label: 'メンバー',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.event_note),
+          icon: Icon(Icons.article),
           label: '対局記録',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.event_available),
+          label: '予定表',
         ),
       ],
       type: BottomNavigationBarType.fixed,
@@ -72,6 +77,13 @@ class GroupTopState extends ConsumerState<GroupTop> {
                 },
                 icon: const Icon(Icons.arrow_back_ios_new))
             : null,
+        actions: [
+          IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {
+                ref.watch(groupViewModelProvider).ShareGroup(context);
+              }),
+        ],
       ),
       drawer: ref.watch(groupViewModelProvider).detailId.isEmpty
           ? GroupSideMenu()
@@ -101,6 +113,8 @@ class GroupTopState extends ConsumerState<GroupTop> {
         return GroupMember();
       case 3:
         return GroupScore();
+      case 4:
+        return GroupSchedule();
       default:
         return GroupTopMain();
     }

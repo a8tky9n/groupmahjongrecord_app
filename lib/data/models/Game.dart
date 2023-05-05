@@ -54,7 +54,7 @@ class GameResults {
   DateTime? createdAt;
   int? rank;
   String? game;
-  int? score;
+  double? score;
   String? id;
   DateTime? updateAt;
   String? profile;
@@ -72,7 +72,7 @@ class GameResults {
     createdAt = DateTime.parse(json['created_at']);
     rank = json['rank'];
     game = json['game'];
-    score = json['score'];
+    score = json['score'].toDouble();
     id = json['id'];
     updateAt = DateTime.parse(json['update_at']);
     profile = json['profile'];

@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Score {
   int? scoreId;
   DateTime? createDate;
-  List<int>? points;
+  List<double>? points;
   List<User>? users;
 
   Score({
@@ -18,7 +18,7 @@ class Score {
   factory Score.fromJson(Map<String, dynamic> json, String docId) => Score(
         scoreId: json['scoreId'],
         createDate: (json['createDate'] as Timestamp).toDate(),
-        points: json['points'],
+        points: json['points'].toDouble(),
         users: json['users'],
       );
 

@@ -61,6 +61,8 @@ class Profiles {
   bool? isActive;
   String? nickName;
   String? group;
+  int? rate4;
+  int? rate3;
 
   Profiles(
       {this.createdAt,
@@ -70,7 +72,9 @@ class Profiles {
       this.user,
       this.isActive,
       this.nickName,
-      this.group});
+      this.group,
+      this.rate4,
+      this.rate3});
 
   Profiles.fromJson(Map<String, dynamic> json) {
     createdAt = json['created_at'];
@@ -81,6 +85,8 @@ class Profiles {
     isActive = json['is_active'];
     nickName = json['nick_name'];
     group = json['group'];
+    rate4 = json['rate4'];
+    rate3 = json['rate3'];
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +99,8 @@ class Profiles {
     data['is_active'] = this.isActive;
     data['nick_name'] = this.nickName;
     data['group'] = this.group;
+    data['rate4'] = this.rate4;
+    data['rate3'] = this.rate3;
     return data;
   }
 }
