@@ -34,6 +34,9 @@ class GroupSchedule extends ConsumerWidget {
               onPrimary: Colors.white,
             ),
             onPressed: null),
+        // カレンダーを表示
+
+        // 日付が入っていたら予定作成ダイアログ表示
       ],
     );
   }

@@ -25,6 +25,7 @@ class ServerImpl implements Server {
       String body = json.encode(
           {'firebase_uid': _auth.currentUser!.uid, 'is_active': isActive});
       print('RequestBody : ${body}');
+      log(url.toString());
       var response = await http
           .post(url, body: body, headers: {"Content-Type": "application/json"});
       print("アカウント作成結果: " + response.statusCode.toString());
@@ -52,6 +53,7 @@ class ServerImpl implements Server {
         // 'content-type': 'application/json',
         'Authorization': 'Bearer ' + JWT
       };
+      log(url.toString());
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         // log("レスポンス " + response.body);
@@ -127,15 +129,7 @@ class ServerImpl implements Server {
         scheme: VariablesDev['protocol'] as String,
         host: VariablesDev['host'] as String,
         port: VariablesDev['port'] as int,
-        // scheme: environment['protocol'] as String,
-        // host: environment['host'] as String,
-        // port: environment['port'] as int,
         path: '/api/groups/create_groups',
-        // queryParameters: {
-        //   'title': Uri.encodeFull(json['title']),
-        //   'password': Uri.encodeFull(json['password']),
-        //   'text': Uri.encodeFull(json['text']),
-        // }
       );
       var JWT = await _auth.currentUser!.getIdToken(true);
       Map<String, String> headers = {
@@ -146,10 +140,9 @@ class ServerImpl implements Server {
       Map<String, String> data = {
         'title': json['title'],
         'password': json['password'],
-        'text': json['text']
+        'text': json['text'] ?? ""
       };
-      // log("JSON " + jsonEncode(json));
-      // log("JSON(UTF8) " + utf8.encode(jsonEncode(json)).toString());
+
       log(url.toString());
       var request = new http.MultipartRequest(
         'POST',
@@ -199,6 +192,7 @@ class ServerImpl implements Server {
       Map<String, String> headers = {
         'Authorization': 'Bearer ' + JWT,
       };
+      log(url.toString());
       var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
@@ -234,6 +228,7 @@ class ServerImpl implements Server {
         'Authorization': 'Bearer ' + JWT,
       };
 
+      log(url.toString());
       var response = await http.put(url, headers: headers);
       if (response.statusCode == 200) {
         log("レスポンス" + response.body);
@@ -267,6 +262,7 @@ class ServerImpl implements Server {
         'Authorization': 'Bearer ' + JWT,
       };
       log("ポスト内容：" + jsonEncode(json));
+      log(url.toString());
       var response =
           await http.post(url, headers: headers, body: jsonEncode(json));
       if (response.statusCode == 200) {
@@ -295,6 +291,7 @@ class ServerImpl implements Server {
         'Authorization': 'Bearer ' + JWT,
       };
       log("ポスト内容：" + jsonEncode(json));
+      log(url.toString());
       var response =
           await http.put(url, headers: headers, body: jsonEncode(json));
       if (response.statusCode == 200) {
